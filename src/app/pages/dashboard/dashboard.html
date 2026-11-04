@@ -1,0 +1,77 @@
+<section class="cabecera">
+  <p class="kicker">Inicio</p>
+  <h1>Hola, {{ auth.session()?.user?.nombre }}</h1>
+</section>
+
+@if (esGestor()) {
+  <section class="kpis">
+    <article class="kpi">
+      <span>Ingresos</span>
+      <strong>{{ sales.ingresos() | currency: 'EUR' }}</strong>
+      <small>ventas completadas</small>
+    </article>
+    <article class="kpi">
+      <span>Ventas</span>
+      <strong>{{ sales.ventas().length }}</strong>
+      <small>registradas en total</small>
+    </article>
+    <article class="kpi">
+      <span>Unidades</span>
+      <strong>{{ sales.unidades() }}</strong>
+      <small>vendidas (sin canceladas)</small>
+    </article>
+    <article class="kpi">
+      <span>Catálogo</span>
+      <strong>{{ juegos().length }}</strong>
+      <small>videojuegos</small>
+    </article>
+  </section>
+}
+
+<section class="bloque">
+  @if (ofertas$ | async; as ofertas) {
+    <div class="bloque-cab">
+      <h2>Ofertas en directo</h2>
+      <span class="en-directo">Actualizado a las {{ ofertas.hora | date: 'HH:mm:ss' }} · cada 30 s</span>
+    </div>
+    <div class="carrusel">
+      @for (j of ofertas.juegos; track j.id) {
+        <app-videogame-card [juego]="j" (agregar)="agregar($event)" />
+      }
+    </div>
+  } @else {
+    <p class="cargando">Cargando ofertas…</p>
+  }
+</section>
+
+@if (esGestor()) {
+  <section class="graficos">
+    <article class="panel">
+      <h2>Ingresos por mes · 2026</h2>
+      <div class="lienzo"><canvas #graficoMes aria-label="Gráfico de ingresos por mes"></canvas></div>
+    </article>
+    <article class="panel">
+      <h2>Unidades por género</h2>
+      <div class="lienzo"><canvas #graficoGenero aria-label="Gráfico de unidades por género"></canvas></div>
+    </article>
+  </section>
+}
+
+<section class="bloque">
+  <h2>Los más vendidos</h2>
+  <div class="top">
+    @for (t of topVendidos(); track t.juego.id; let i = $index) {
+      <a class="top-ficha" [routerLink]="['/detalle', t.juego.id]">
+        <b class="puesto">{{ i + 1 }}</b>
+        <img [src]="t.juego.imagen" [alt]="'Portada de ' + t.juego.titulo" width="300" height="400" />
+        <div>
+          <h3>{{ t.juego.titulo }}</h3>
+          <p class="meta">{{ t.unidades }} uds. vendidas · ★ {{ t.juego.valoracion }}</p>
+          <p class="precio">{{ t.juego | precioFinal | currency: 'EUR' }}</p>
+        </div>
+      </a>
+    } @empty {
+      <p class="cargando">Calculando…</p>
+    }
+  </div>
+</section>

@@ -1,0 +1,56 @@
+<section class="auth">
+  <div class="auth-card" animate.enter="entrar">
+    <p class="kicker">Nueva cuenta de cliente</p>
+    <h1>Registro</h1>
+
+    <form [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+      <label>
+        Nombre
+        <input type="text" formControlName="nombre" autocomplete="name" />
+      </label>
+      @if (invalido('nombre')) {
+        <small class="error">El nombre tiene al menos 3 letras</small>
+      }
+
+      <label>
+        Email
+        <input type="email" formControlName="email" autocomplete="email" />
+      </label>
+      @if (invalido('email')) {
+        <small class="error">Escribe un email válido</small>
+      }
+
+      <label>
+        Contraseña
+        <input type="password" formControlName="password" autocomplete="new-password" />
+      </label>
+      @if (invalido('password')) {
+        <small class="error">Mínimo 6 caracteres, con letras y números</small>
+      }
+
+      <label>
+        Repite la contraseña
+        <input type="password" formControlName="confirmar" autocomplete="new-password" />
+      </label>
+      @if (form.controls.confirmar.touched && form.hasError('noCoinciden')) {
+        <small class="error">Las contraseñas no coinciden</small>
+      }
+
+      <label class="check">
+        <input type="checkbox" formControlName="terminos" />
+        Acepto las condiciones de uso
+      </label>
+      @if (invalido('terminos')) {
+        <small class="error">Tienes que aceptar las condiciones</small>
+      }
+
+      @if (error()) {
+        <p class="error caja" role="alert">{{ error() }}</p>
+      }
+
+      <button class="btn ancho" type="submit">Crear cuenta</button>
+    </form>
+
+    <p class="pie">¿Ya tienes cuenta? <a routerLink="/login">Entra</a></p>
+  </div>
+</section>

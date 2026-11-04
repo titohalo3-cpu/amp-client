@@ -1,0 +1,23 @@
+<article class="ficha">
+  <a class="portada" [routerLink]="['/detalle', juego.id]" tabindex="-1">
+    <img [src]="juego.imagen" [alt]="'Portada de ' + juego.titulo" loading="lazy" width="300" height="400" />
+    @if (juego.oferta > 0) {
+      <span class="etiqueta">-{{ juego.oferta }}%</span>
+    }
+  </a>
+  <div class="ficha-cuerpo">
+    <h3><a [routerLink]="['/detalle', juego.id]">{{ juego.titulo }}</a></h3>
+    <p class="meta">★ {{ juego.valoracion }} · {{ juego.genero }}</p>
+    <div class="ficha-pie">
+      <p class="precio">
+        @if (juego.oferta > 0) {
+          <s>{{ juego.precio | currency: 'EUR' }}</s>
+        }
+        {{ juego | precioFinal | currency: 'EUR' }}
+      </p>
+      <button class="btn btn-peq" type="button" (click)="agregar.emit(juego)" [attr.aria-label]="'Añadir ' + juego.titulo + ' al carrito'">
+        + Carrito
+      </button>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,38 @@
+<div class="filtro-caja">
+  <form class="filtro" [formGroup]="form" role="search">
+    <input type="search" formControlName="texto" placeholder="Buscar por título…" aria-label="Buscar por título" />
+
+    <select formControlName="genero" aria-label="Género">
+      <option value="">Todos los géneros</option>
+      @for (g of generos; track g) {
+        <option [value]="g">{{ g }}</option>
+      }
+    </select>
+
+    <select formControlName="valoracionMin" aria-label="Valoración mínima">
+      <option [ngValue]="0">Cualquier valoración</option>
+      <option [ngValue]="4">★ 4 o más</option>
+      <option [ngValue]="4.5">★ 4,5 o más</option>
+    </select>
+
+    <select formControlName="orden" aria-label="Ordenar por">
+      <option value="valoracion">Mejor valorados</option>
+      <option value="az">A-Z</option>
+      <option value="recientes">Más recientes</option>
+      <option value="precio-asc">Precio: de menor a mayor</option>
+      <option value="precio-desc">Precio: de mayor a menor</option>
+    </select>
+
+    <label class="check">
+      <input type="checkbox" formControlName="soloOfertas" />
+      Solo ofertas
+    </label>
+  </form>
+
+  <div class="atajos">
+    <button type="button" class="chip" (click)="atajo('top')">★ Mejor valorados</button>
+    <button type="button" class="chip" (click)="atajo('ofertas')">% Ofertas</button>
+    <button type="button" class="chip" (click)="atajo('nuevos')">Novedades</button>
+    <button type="button" class="btn-texto" (click)="limpiar()">Limpiar filtros</button>
+  </div>
+</div>

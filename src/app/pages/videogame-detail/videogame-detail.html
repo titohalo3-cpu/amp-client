@@ -1,0 +1,39 @@
+@if (juego(); as j) {
+  <a routerLink="/videojuegos" class="volver">← Volver al catálogo</a>
+  <article class="detalle" animate.enter="entrar">
+    <div class="detalle-portada">
+      <img [src]="j.imagen" [alt]="'Portada de ' + j.titulo" width="300" height="400" />
+      @if (j.oferta > 0) {
+        <span class="etiqueta grande">-{{ j.oferta }}%</span>
+      }
+    </div>
+    <div class="detalle-info">
+      <p class="kicker">{{ j.genero }}</p>
+      <h1>{{ j.titulo }}</h1>
+      <p class="valoracion">★ {{ j.valoracion }} <span>/ 5</span></p>
+      <p>{{ j.descripcion }}</p>
+      <dl class="datos">
+        <div><dt>Plataformas</dt><dd>{{ j.plataformas.join(' · ') }}</dd></div>
+        <div><dt>Lanzamiento</dt><dd>{{ j.fechaLanzamiento | date: 'longDate' }}</dd></div>
+        <div><dt>Stock</dt><dd>{{ j.stock }} unidades</dd></div>
+        <div><dt>Referencia</dt><dd>#{{ j.id }}</dd></div>
+      </dl>
+      <p class="precio grande">
+        @if (j.oferta > 0) {
+          <s>{{ j.precio | currency: 'EUR' }}</s>
+        }
+        {{ j | precioFinal | currency: 'EUR' }}
+      </p>
+      <div class="acciones">
+        <button class="btn" type="button" (click)="agregar(j)">Añadir al carrito</button>
+        @if (esGestor()) {
+          <a class="btn btn-sec" [routerLink]="['/admin/videojuego', j.id]">Editar</a>
+        }
+      </div>
+    </div>
+  </article>
+} @else if (juego() === null) {
+  <p class="vacio">Ese videojuego no existe. <a routerLink="/videojuegos">Volver al catálogo</a></p>
+} @else {
+  <p class="cargando">Cargando…</p>
+}

@@ -1,0 +1,40 @@
+<section class="cabecera">
+  <p class="kicker">Tu compra</p>
+  <h1>Carrito</h1>
+</section>
+
+@if (cart.items().length > 0) {
+  <div class="carrito-lista">
+    @for (item of cart.items(); track item.videogame.id) {
+      <article class="linea" animate.enter="entrar">
+        <img [src]="item.videogame.imagen" [alt]="item.videogame.titulo" width="300" height="400" />
+        <div class="linea-info">
+          <h3><a [routerLink]="['/detalle', item.videogame.id]">{{ item.videogame.titulo }}</a></h3>
+          <p class="meta">{{ item.videogame | precioFinal | currency: 'EUR' }} / unidad</p>
+        </div>
+        <div class="cantidad">
+          <button type="button" (click)="cart.remove(item.videogame.id)" aria-label="Quitar una unidad">−</button>
+          <span>{{ item.cantidad }}</span>
+          <button type="button" (click)="cart.add(item.videogame)" aria-label="Añadir una unidad">+</button>
+        </div>
+        <p class="precio">{{ (item.videogame | precioFinal) * item.cantidad | currency: 'EUR' }}</p>
+      </article>
+    }
+  </div>
+
+  <div class="panel resumen">
+    <p>{{ cart.totalUnidades() }} unidades</p>
+    <p class="total">Total <strong>{{ cart.totalPrecio() | currency: 'EUR' }}</strong></p>
+    <div class="acciones">
+      <button type="button" class="btn btn-sec" (click)="cart.clear()">Vaciar</button>
+      <button type="button" class="btn" (click)="pagar()" [disabled]="pagando()">
+        {{ pagando() ? 'Procesando…' : 'Pagar' }}
+      </button>
+    </div>
+  </div>
+} @else {
+  <div class="vacio panel">
+    <p>Tu carrito está vacío.</p>
+    <a class="btn" routerLink="/videojuegos">Ver videojuegos</a>
+  </div>
+}

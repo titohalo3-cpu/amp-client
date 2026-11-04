@@ -1,0 +1,99 @@
+<a routerLink="/admin" [queryParams]="{ pestana: 'juegos' }" class="volver">← Volver a gestión</a>
+<section class="cabecera">
+  <p class="kicker">{{ esNuevo ? 'Alta' : 'Edición · #' + id }}</p>
+  <h1>{{ esNuevo ? 'Nuevo videojuego' : 'Editar videojuego' }}</h1>
+</section>
+
+<form class="panel formulario" [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+  <div class="campos">
+    <label class="doble">
+      Título
+      <input type="text" formControlName="titulo" />
+      @if (invalido('titulo')) {
+        <small class="error">Obligatorio, mínimo 2 caracteres</small>
+      }
+    </label>
+
+    <label>
+      Género
+      <select formControlName="genero">
+        <option value="" disabled>Elige uno</option>
+        @for (g of generos; track g) {
+          <option [value]="g">{{ g }}</option>
+        }
+      </select>
+      @if (invalido('genero')) {
+        <small class="error">Elige un género</small>
+      }
+    </label>
+
+    <label>
+      Plataformas (separadas por comas)
+      <input type="text" formControlName="plataformas" placeholder="PC, PS5, Switch" />
+      @if (invalido('plataformas')) {
+        <small class="error">Pon al menos una plataforma</small>
+      }
+    </label>
+
+    <label>
+      Precio (€)
+      <input type="number" step="0.01" formControlName="precio" />
+      @if (invalido('precio')) {
+        <small class="error">Tiene que ser mayor que 0</small>
+      }
+    </label>
+
+    <label>
+      Oferta (% de descuento)
+      <input type="number" formControlName="oferta" />
+      @if (invalido('oferta')) {
+        <small class="error">Entre 0 y 90</small>
+      }
+    </label>
+
+    <label>
+      Valoración (0 a 5)
+      <input type="number" step="0.1" formControlName="valoracion" />
+      @if (invalido('valoracion')) {
+        <small class="error">Entre 0 y 5</small>
+      }
+    </label>
+
+    <label>
+      Stock
+      <input type="number" formControlName="stock" />
+      @if (invalido('stock')) {
+        <small class="error">No puede ser negativo</small>
+      }
+    </label>
+
+    <label>
+      Fecha de lanzamiento
+      <input type="date" formControlName="fechaLanzamiento" />
+    </label>
+
+    <label>
+      Portada (ruta de la imagen)
+      <input type="text" formControlName="imagen" />
+    </label>
+
+    <label class="doble">
+      Descripción
+      <textarea rows="3" formControlName="descripcion"></textarea>
+      @if (invalido('descripcion')) {
+        <small class="error">Máximo 300 caracteres</small>
+      }
+    </label>
+  </div>
+
+  <aside class="vista-previa">
+    <img [src]="form.controls.imagen.value" alt="Vista previa de la portada" width="300" height="400" />
+  </aside>
+
+  <div class="acciones doble">
+    <button class="btn" type="submit" [disabled]="guardando()">
+      {{ esNuevo ? 'Añadir videojuego' : 'Guardar cambios' }}
+    </button>
+    <a class="btn btn-sec" routerLink="/admin" [queryParams]="{ pestana: 'juegos' }">Cancelar</a>
+  </div>
+</form>

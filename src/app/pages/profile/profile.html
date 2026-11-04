@@ -1,0 +1,63 @@
+<section class="cabecera">
+  <p class="kicker">Tu cuenta</p>
+  <h1>Perfil</h1>
+</section>
+
+@if (auth.session(); as s) {
+  <div class="perfil">
+    <article class="panel">
+      <div class="avatar">{{ s.user.nombre.charAt(0) }}</div>
+      <h2>{{ s.user.nombre }}</h2>
+      <p class="meta">{{ s.user.email }}</p>
+      <p><span class="pildora">{{ s.user.rol }}</span></p>
+      <p class="meta">Sesión iniciada el {{ s.inicio | date: 'medium' }}</p>
+
+      <form [formGroup]="form" (ngSubmit)="guardar()" class="fila-form" novalidate>
+        <label>
+          Cambiar nombre
+          <input type="text" formControlName="nombre" />
+        </label>
+        <button class="btn btn-peq" type="submit">Guardar</button>
+      </form>
+      @if (form.controls.nombre.touched && form.controls.nombre.invalid) {
+        <small class="error">Mínimo 3 letras</small>
+      }
+    </article>
+
+    <article class="panel">
+      <h2>Permisos de tu perfil</h2>
+      <ul class="lista-check">
+        @for (p of permisos(); track p) {
+          <li>{{ p }}</li>
+        }
+      </ul>
+    </article>
+  </div>
+
+  <section class="bloque">
+    <h2>Mis compras</h2>
+    @if (misCompras().length > 0) {
+      <div class="tabla-scroll">
+        <table class="tabla">
+          <thead>
+            <tr><th>#</th><th>Fecha</th><th>Juego</th><th>Uds.</th><th>Total</th><th>Estado</th></tr>
+          </thead>
+          <tbody>
+            @for (v of misCompras(); track v.id) {
+              <tr>
+                <td>{{ v.id }}</td>
+                <td>{{ v.fecha | date: 'dd/MM/yyyy' }}</td>
+                <td>{{ titulo(v.videogameId) }}</td>
+                <td>{{ v.cantidad }}</td>
+                <td>{{ v.total | currency: 'EUR' }}</td>
+                <td><span class="estado" [class]="'estado ' + v.estado">{{ v.estado }}</span></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <p class="vacio">Todavía no has comprado nada.</p>
+    }
+  </section>
+}

@@ -1,0 +1,19 @@
+<section class="cabecera">
+  <p class="kicker">Catálogo</p>
+  <h1>Videojuegos</h1>
+</section>
+
+<app-filter-bar [generos]="generos()" (filtroChange)="filtro.set($event)" />
+
+@if (juegos(); as todos) {
+  <p class="contador">{{ visibles().length }} de {{ todos.length }} juegos</p>
+  <div class="rejilla">
+    @for (juego of visibles(); track juego.id) {
+      <app-videogame-card [juego]="juego" (agregar)="agregar($event)" animate.enter="entrar" />
+    } @empty {
+      <p class="vacio">Ningún juego cumple el filtro.</p>
+    }
+  </div>
+} @else {
+  <p class="cargando">Cargando catálogo…</p>
+}

@@ -1,0 +1,140 @@
+<section class="cabecera">
+  <p class="kicker">Solo {{ esAdmin() ? 'administrador' : 'trabajadores y administrador' }}</p>
+  <h1>Gestión</h1>
+</section>
+
+<div class="pestanas" role="tablist">
+  <button role="tab" type="button" [class.activa]="pestana() === 'ventas'" [attr.aria-selected]="pestana() === 'ventas'" (click)="pestana.set('ventas')">
+    Ventas <small>{{ sales.ventas().length }}</small>
+  </button>
+  <button role="tab" type="button" [class.activa]="pestana() === 'juegos'" [attr.aria-selected]="pestana() === 'juegos'" (click)="pestana.set('juegos')">
+    Videojuegos <small>{{ juegos().length }}</small>
+  </button>
+  @if (esAdmin()) {
+    <button role="tab" type="button" [class.activa]="pestana() === 'usuarios'" [attr.aria-selected]="pestana() === 'usuarios'" (click)="pestana.set('usuarios')">
+      Usuarios <small>{{ usuarios().length }}</small>
+    </button>
+  }
+</div>
+
+@switch (pestana()) {
+  @case ('ventas') {
+    <section class="panel-tabla" animate.enter="entrar">
+      <div class="barra">
+        <label class="en-linea">
+          Estado
+          <select #selEstado (change)="estadoFiltro.set($any(selEstado.value))">
+            <option value="">Todos</option>
+            @for (e of estados; track e) {
+              <option [value]="e">{{ e }}</option>
+            }
+          </select>
+        </label>
+        <p class="meta">{{ ventasTabla().length }} ventas · ingresos {{ sales.ingresos() | currency: 'EUR' }}</p>
+      </div>
+      <div class="tabla-scroll">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th><button type="button" (click)="ordenar('id')"># {{ flecha('id') }}</button></th>
+              <th><button type="button" (click)="ordenar('fecha')">Fecha {{ flecha('fecha') }}</button></th>
+              <th>Juego</th>
+              <th><button type="button" (click)="ordenar('cantidad')">Uds. {{ flecha('cantidad') }}</button></th>
+              <th><button type="button" (click)="ordenar('total')">Total {{ flecha('total') }}</button></th>
+              <th><button type="button" (click)="ordenar('estado')">Estado {{ flecha('estado') }}</button></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (v of ventasTabla(); track v.id) {
+              <tr>
+                <td>{{ v.id }}</td>
+                <td>{{ v.fecha | date: 'dd/MM/yyyy' }}</td>
+                <td><a [routerLink]="['/detalle', v.videogameId]">{{ titulo(v.videogameId) }}</a></td>
+                <td>
+                  <input #cant class="mini" type="number" min="1" [value]="v.cantidad" (change)="cambiarCantidad(v, cant.value)" aria-label="Cantidad" />
+                </td>
+                <td>{{ v.total | currency: 'EUR' }}</td>
+                <td>
+                  <select #sel [class]="'estado ' + v.estado" (change)="cambiarEstado(v, sel.value)" aria-label="Estado">
+                    @for (e of estados; track e) {
+                      <option [value]="e" [selected]="e === v.estado">{{ e }}</option>
+                    }
+                  </select>
+                </td>
+                <td><button type="button" class="btn-peligro" (click)="eliminarVenta(v)">Eliminar</button></td>
+              </tr>
+            } @empty {
+              <tr><td colspan="7" class="vacio">No hay ventas con ese estado.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+
+  @case ('juegos') {
+    <section class="panel-tabla" animate.enter="entrar">
+      <app-filter-bar [generos]="generos()" (filtroChange)="filtro.set($event)" />
+      <div class="barra">
+        <p class="meta">{{ juegosFiltrados().length }} de {{ juegos().length }} videojuegos</p>
+        <a class="btn btn-peq" routerLink="/admin/videojuego/nuevo">+ Nuevo videojuego</a>
+      </div>
+      <div class="tabla-scroll">
+        <table class="tabla">
+          <thead>
+            <tr><th></th><th>Título</th><th>Género</th><th>Precio</th><th>Oferta</th><th>★</th><th>Stock</th><th></th></tr>
+          </thead>
+          <tbody>
+            @for (j of juegosFiltrados(); track j.id) {
+              <tr>
+                <td><img class="mini-portada" [src]="j.imagen" alt="" width="300" height="400" /></td>
+                <td><a [routerLink]="['/detalle', j.id]">{{ j.titulo }}</a></td>
+                <td>{{ j.genero }}</td>
+                <td>{{ j | precioFinal | currency: 'EUR' }}</td>
+                <td>{{ j.oferta ? '-' + j.oferta + '%' : '—' }}</td>
+                <td>{{ j.valoracion }}</td>
+                <td>{{ j.stock }}</td>
+                <td class="acciones-tabla">
+                  <a class="btn-texto" [routerLink]="['/admin/videojuego', j.id]">Editar</a>
+                  <button type="button" class="btn-peligro" (click)="eliminarJuego(j)">Eliminar</button>
+                </td>
+              </tr>
+            } @empty {
+              <tr><td colspan="8" class="vacio">Ningún juego cumple el filtro.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+
+  @case ('usuarios') {
+    <section class="panel-tabla" animate.enter="entrar">
+      <div class="tabla-scroll">
+        <table class="tabla">
+          <thead>
+            <tr><th>#</th><th>Nombre</th><th>Email</th><th>Rol</th><th></th></tr>
+          </thead>
+          <tbody>
+            @for (u of usuarios(); track u.id) {
+              <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.nombre }}</td>
+                <td>{{ u.email }}</td>
+                <td>
+                  <select #rol (change)="cambiarRol(u, rol.value)" aria-label="Rol">
+                    @for (r of roles; track r) {
+                      <option [value]="r" [selected]="r === u.rol">{{ r }}</option>
+                    }
+                  </select>
+                </td>
+                <td><button type="button" class="btn-peligro" (click)="eliminarUsuario(u)">Eliminar</button></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+}

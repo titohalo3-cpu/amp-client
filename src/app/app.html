@@ -1,0 +1,11 @@
+<app-menu />
+
+<main class="contenedor">
+  <router-outlet />
+</main>
+
+@if (avisos.aviso(); as aviso) {
+  <div class="toast" [class.error]="aviso.tipo === 'error'" role="status" animate.enter="subir">
+    {{ aviso.texto }}
+  </div>
+}

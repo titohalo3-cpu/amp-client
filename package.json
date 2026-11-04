@@ -8,8 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "api": "json-server --watch db.json --port 3000",
-    "api:reset": "node -e \"require('fs').copyFileSync('db.original.json','db.json')\"",
-    "deploy": "node scripts/publicar-pages.mjs"
+    "api:reset": "node -e \"require('fs').copyFileSync('db.original.json','db.json')\""
   },
   "private": true,
   "packageManager": "npm@12.0.2",

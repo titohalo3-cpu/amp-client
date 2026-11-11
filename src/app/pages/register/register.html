@@ -16,7 +16,11 @@
         Email
         <input type="email" formControlName="email" autocomplete="email" />
       </label>
-      @if (invalido('email')) {
+      @if (form.controls.email.pending) {
+        <small class="comprobando">Comprobando si el email está libre…</small>
+      } @else if (form.controls.email.hasError('emailOcupado')) {
+        <small class="error">Ese email ya está registrado</small>
+      } @else if (invalido('email')) {
         <small class="error">Escribe un email válido</small>
       }
 

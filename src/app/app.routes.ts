@@ -7,6 +7,7 @@ import { Dashboard } from './pages/dashboard/dashboard';
 import { Login } from './pages/login/login';
 import { Profile } from './pages/profile/profile';
 import { Register } from './pages/register/register';
+import { SaleForm } from './pages/sale-form/sale-form';
 import { VideogameDetail } from './pages/videogame-detail/videogame-detail';
 import { VideogameForm } from './pages/videogame-form/videogame-form';
 import { VideogameList } from './pages/videogame-list/videogame-list';
@@ -37,6 +38,14 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: gestores,
     title: 'Editar videojuego · AmpClient',
+  },
+  {
+    // :id puede ser un número (editar) o la palabra 'nueva' (crear)
+    path: 'admin/venta/:id',
+    component: SaleForm,
+    canActivate: [authGuard, roleGuard],
+    data: gestores,
+    title: 'Venta · AmpClient',
   },
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: '/dashboard' },

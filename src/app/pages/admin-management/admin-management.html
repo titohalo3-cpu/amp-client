@@ -31,6 +31,7 @@
           </select>
         </label>
         <p class="meta">{{ ventasTabla().length }} ventas · ingresos {{ sales.ingresos() | currency: 'EUR' }}</p>
+        <a class="btn btn-peq" routerLink="/admin/venta/nueva">+ Nueva venta</a>
       </div>
       <div class="tabla-scroll">
         <table class="tabla">
@@ -62,7 +63,10 @@
                     }
                   </select>
                 </td>
-                <td><button type="button" class="btn-peligro" (click)="eliminarVenta(v)">Eliminar</button></td>
+                <td class="acciones-tabla">
+                  <a class="btn-texto" [routerLink]="['/admin/venta', v.id]">Editar</a>
+                  <button type="button" class="btn-peligro" (click)="eliminarVenta(v)">Eliminar</button>
+                </td>
               </tr>
             } @empty {
               <tr><td colspan="7" class="vacio">No hay ventas con ese estado.</td></tr>

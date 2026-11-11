@@ -1,0 +1,89 @@
+<a routerLink="/admin" [queryParams]="{ pestana: 'ventas' }" class="volver">← Volver a gestión</a>
+<section class="cabecera">
+  <p class="kicker">{{ esNueva ? 'Alta' : 'Edición · #' + id }}</p>
+  <h1>{{ esNueva ? 'Nueva venta' : 'Editar venta' }}</h1>
+</section>
+
+<form class="panel formulario" [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+  <div class="campos">
+    <label class="doble">
+      Videojuego
+      <select formControlName="videogameId">
+        <option [ngValue]="0" disabled>Elige un videojuego</option>
+        @for (j of juegos(); track j.id) {
+          <option [ngValue]="j.id">{{ j.titulo }} · {{ j.stock }} en stock</option>
+        }
+      </select>
+      @if (invalido('videogameId')) {
+        <small class="error">Elige un videojuego</small>
+      }
+    </label>
+
+    <label class="doble">
+      Cliente
+      <select formControlName="userId">
+        <option [ngValue]="0" disabled>Elige un usuario</option>
+        @for (u of usuarios(); track u.id) {
+          <option [ngValue]="u.id">{{ u.nombre }} ({{ u.email }})</option>
+        }
+      </select>
+      @if (invalido('userId')) {
+        <small class="error">Elige un usuario</small>
+      }
+    </label>
+
+    <label>
+      Cantidad
+      <input type="number" min="1" formControlName="cantidad" />
+      @if (invalido('cantidad')) {
+        <small class="error">Un número entero mayor que 0</small>
+      } @else if (form.hasError('sinStock')) {
+        <small class="error">Solo quedan {{ form.getError('sinStock').stock }} unidades</small>
+      }
+    </label>
+
+    <label>
+      Precio por unidad (€)
+      <input type="number" step="0.01" formControlName="precioUnitario" />
+      @if (invalido('precioUnitario')) {
+        <small class="error">No puede ser negativo</small>
+      }
+    </label>
+
+    <label>
+      Fecha
+      <input type="date" formControlName="fecha" />
+      @if (form.controls.fecha.hasError('fechaFutura')) {
+        <small class="error">No puede ser una fecha futura</small>
+      } @else if (invalido('fecha')) {
+        <small class="error">La fecha es obligatoria</small>
+      }
+    </label>
+
+    <label>
+      Estado
+      <select formControlName="estado">
+        @for (e of estados; track e) {
+          <option [value]="e">{{ e }}</option>
+        }
+      </select>
+    </label>
+
+    <p class="total-venta doble">Total <strong>{{ total() | currency: 'EUR' }}</strong></p>
+  </div>
+
+  <aside class="vista-previa">
+    @if (juegoElegido(); as j) {
+      <img [src]="j.imagen" [alt]="'Portada de ' + j.titulo" width="300" height="400" />
+    } @else {
+      <img src="img/generica.svg" alt="" width="300" height="400" />
+    }
+  </aside>
+
+  <div class="acciones doble">
+    <button class="btn" type="submit" [disabled]="guardando()">
+      {{ esNueva ? 'Registrar venta' : 'Guardar cambios' }}
+    </button>
+    <a class="btn btn-sec" routerLink="/admin" [queryParams]="{ pestana: 'ventas' }">Cancelar</a>
+  </div>
+</form>

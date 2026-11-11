@@ -3,11 +3,13 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NotificationService } from '../../services/notification.service';
 import { VideogameService } from '../../services/videogame.service';
+import { fechaNoFutura, sinRepetidos } from '../../shared/validators';
 
 /**
  * Alta y edición de videojuegos. Ruta: admin/videojuego/:id
  * - Si :id es 'nuevo' → formulario vacío y POST al guardar.
  * - Si :id es un número → carga el juego y PUT al guardar.
+ * Las plataformas son un FormArray: una lista de controles que crece y decrece.
  */
 @Component({
   selector: 'app-videogame-form',
@@ -26,27 +28,44 @@ export class VideogameForm {
   protected guardando = signal(false);
 
   protected generos = ['Acción', 'Aventura', 'Carreras', 'Deportes', 'Metroidvania', 'Plataformas', 'Puzles', 'RPG', 'Roguelike', 'Sandbox', 'Simulación', 'Terror'];
+  protected opcionesPlataforma = ['PC', 'PS5', 'PS4', 'Xbox', 'Switch'];
 
   protected form = this.fb.group({
     titulo: ['', [Validators.required, Validators.minLength(2)]],
     genero: ['', Validators.required],
-    plataformas: ['', Validators.required], // texto separado por comas
+    // FormArray: empieza vacío y se añaden controles con agregarPlataforma()
+    plataformas: this.fb.array<string>([], [Validators.required, sinRepetidos]),
     precio: [19.99, [Validators.required, Validators.min(0.01)]],
     oferta: [0, [Validators.required, Validators.min(0), Validators.max(90)]],
     valoracion: [4, [Validators.required, Validators.min(0), Validators.max(5)]],
     stock: [10, [Validators.required, Validators.min(0)]],
-    fechaLanzamiento: [new Date().toISOString().slice(0, 10), Validators.required],
+    fechaLanzamiento: [new Date().toISOString().slice(0, 10), [Validators.required, fechaNoFutura]],
     imagen: ['img/generica.svg', Validators.required],
     descripcion: ['', Validators.maxLength(300)],
   });
 
+  /** Atajo para usar el FormArray en la plantilla. */
+  protected get plataformas() {
+    return this.form.controls.plataformas;
+  }
+
   constructor() {
-    if (!this.esNuevo) {
-      this.juegosSrv.getById(Number(this.id)).subscribe((juego) =>
-        // patchValue rellena los campos que coinciden por nombre
-        this.form.patchValue({ ...juego, plataformas: juego.plataformas.join(', ') }),
-      );
+    if (this.esNuevo) {
+      this.agregarPlataforma('PC');
+    } else {
+      this.juegosSrv.getById(Number(this.id)).subscribe(({ plataformas, ...resto }) => {
+        this.form.patchValue(resto); // rellena los campos que coinciden por nombre
+        plataformas.forEach((p) => this.agregarPlataforma(p)); // un control por plataforma
+      });
     }
+  }
+
+  agregarPlataforma(valor = ''): void {
+    this.plataformas.push(this.fb.control(valor, Validators.required));
+  }
+
+  quitarPlataforma(indice: number): void {
+    this.plataformas.removeAt(indice);
   }
 
   invalido(campo: keyof typeof this.form.controls): boolean {
@@ -59,14 +78,7 @@ export class VideogameForm {
       this.form.markAllAsTouched();
       return;
     }
-    const valores = this.form.getRawValue();
-    const datos = {
-      ...valores,
-      plataformas: valores.plataformas
-        .split(',')
-        .map((p) => p.trim())
-        .filter((p) => p !== ''),
-    };
+    const datos = this.form.getRawValue(); // plataformas ya es un array de strings
     const peticion = this.esNuevo
       ? this.juegosSrv.create(datos)
       : this.juegosSrv.update({ ...datos, id: Number(this.id) });

@@ -277,3 +277,13 @@ label.en-linea select { width: auto; }
 @keyframes pop { 40% { transform: scale(1.45); } }
 @keyframes latido { 50% { opacity: 0.3; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- Formularios reactivos: FormArray de plataformas y venta ---------- */
+fieldset.plataformas { border: 1px solid var(--line); border-radius: 10px; padding: 0.8rem; margin: 0; display: grid; gap: 0.5rem; align-content: start; }
+fieldset.plataformas legend { color: var(--mute); font-size: 0.85rem; padding: 0 0.3rem; }
+.fila-plataforma { display: flex; gap: 0.5rem; align-items: center; }
+.fila-plataforma .btn-peligro { padding: 0.5rem 0.7rem; }
+fieldset.plataformas .chip { justify-self: start; }
+.comprobando { color: var(--mute); font-size: 0.8rem; margin-top: -0.4rem; }
+.total-venta { margin: 0; font-size: 1.05rem; display: flex; align-items: baseline; gap: 0.6rem; }
+.total-venta strong { font: 700 1.8rem var(--fuente-titulo); color: var(--acc); }

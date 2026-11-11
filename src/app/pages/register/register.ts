@@ -3,9 +3,9 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
-import { passwordsIguales } from '../../shared/validators';
+import { emailDisponible, passwordsIguales } from '../../shared/validators';
 
-/** Formulario reactivo de registro con validaciones propias. */
+/** Formulario reactivo de registro con validadores síncronos, de grupo y asíncrono. */
 @Component({
   selector: 'app-register',
   imports: [ReactiveFormsModule, RouterLink],
@@ -22,7 +22,8 @@ export class Register {
   protected form = this.fb.group(
     {
       nombre: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
+      // [valor inicial, validadores síncronos, validadores asíncronos]
+      email: ['', [Validators.required, Validators.email], [emailDisponible(this.auth)]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*\d)(?=.*[a-zA-Z]).+$/)]],
       confirmar: ['', Validators.required],
       terminos: [false, Validators.requiredTrue],
@@ -38,7 +39,8 @@ export class Register {
 
   enviar(): void {
     this.error.set('');
-    if (this.form.invalid) {
+    // pending = el validador asíncrono todavía está preguntando al servidor
+    if (this.form.invalid || this.form.pending) {
       this.form.markAllAsTouched();
       return;
     }

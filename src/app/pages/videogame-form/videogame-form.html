@@ -27,13 +27,27 @@
       }
     </label>
 
-    <label>
-      Plataformas (separadas por comas)
-      <input type="text" formControlName="plataformas" placeholder="PC, PS5, Switch" />
-      @if (invalido('plataformas')) {
-        <small class="error">Pon al menos una plataforma</small>
+    <!-- FormArray: un desplegable por plataforma, se pueden añadir y quitar -->
+    <fieldset class="plataformas" formArrayName="plataformas">
+      <legend>Plataformas</legend>
+      @for (control of plataformas.controls; track control; let i = $index) {
+        <div class="fila-plataforma">
+          <select [formControlName]="i" [attr.aria-label]="'Plataforma ' + (i + 1)">
+            <option value="" disabled>Elige una</option>
+            @for (p of opcionesPlataforma; track p) {
+              <option [value]="p">{{ p }}</option>
+            }
+          </select>
+          <button type="button" class="btn-peligro" (click)="quitarPlataforma(i)" [attr.aria-label]="'Quitar plataforma ' + (i + 1)">✕</button>
+        </div>
       }
-    </label>
+      <button type="button" class="chip" (click)="agregarPlataforma()">+ Añadir plataforma</button>
+      @if (plataformas.hasError('required')) {
+        <small class="error">Añade al menos una plataforma</small>
+      } @else if (plataformas.hasError('repetidos')) {
+        <small class="error">Hay plataformas repetidas</small>
+      }
+    </fieldset>
 
     <label>
       Precio (€)
@@ -70,6 +84,9 @@
     <label>
       Fecha de lanzamiento
       <input type="date" formControlName="fechaLanzamiento" />
+      @if (form.controls.fechaLanzamiento.hasError('fechaFutura')) {
+        <small class="error">No puede ser una fecha futura</small>
+      }
     </label>
 
     <label>

@@ -1,20 +1,21 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, map, switchMap, tap, throwError } from 'rxjs';
+import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 import { API_URL } from '../api.config';
-import { Rol, Session, User } from '../models/user.interface';
+import { Rol, Session, UsuarioSesion } from '../models/user.interface';
 
 /**
  * Sesión del usuario: login, registro, logout, rol y permisos.
- * El estado vive en una signal y se copia en localStorage
- * para que la sesión siga al recargar la página.
+ * La contraseña se comprueba en el SERVIDOR (Express + bcrypt): el navegador
+ * nunca recibe contraseñas. La sesión vive en una signal y se copia en
+ * localStorage para que siga al recargar la página.
  */
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private url = `${API_URL}/users`;
+  private url = `${API_URL}/auth`;
 
   // Signal privada: solo este servicio puede cambiarla.
   private readonly _session = signal<Session | null>(this.leerSesion());
@@ -24,33 +25,35 @@ export class AuthService {
   readonly isLogged = computed(() => this._session() !== null);
   readonly rol = computed(() => this._session()?.user.rol ?? null);
 
-  /** Busca el usuario por email y comprueba la contraseña. Devuelve true si entra. */
+  /** POST /auth/login. Devuelve true si entra y false si el email o la contraseña no son correctos. */
   login(email: string, password: string): Observable<boolean> {
-    return this.http.get<User[]>(this.url, { params: { email } }).pipe(
-      map((users) => users.find((u) => u.password === password)),
-      tap((user) => {
-        if (user) this.guardarSesion(user);
-      }),
-      map((user) => user !== undefined),
+    return this.http.post<UsuarioSesion>(`${this.url}/login`, { email, password }).pipe(
+      tap((user) => this.guardarSesion(user)),
+      map(() => true),
+      // 401 = credenciales incorrectas: no es un fallo de la app, es un "no"
+      catchError((e: HttpErrorResponse) => (e.status === 401 ? of(false) : throwError(() => e))),
     );
   }
 
-  /** Crea un usuario nuevo con rol cliente (si el email no existe ya). */
-  register(datos: { nombre: string; email: string; password: string }): Observable<User> {
-    return this.http.get<User[]>(this.url, { params: { email: datos.email } }).pipe(
-      switchMap((existentes) =>
-        existentes.length > 0
-          ? throwError(() => new Error('Ese email ya está registrado'))
-          : this.http.post<User>(this.url, { ...datos, rol: 'cliente' }),
-      ),
-    );
+  /** POST /auth/registro. El servidor cifra la contraseña y pone el rol cliente. */
+  register(datos: { nombre: string; email: string; password: string }): Observable<UsuarioSesion> {
+    return this.http
+      .post<UsuarioSesion>(`${this.url}/registro`, datos)
+      .pipe(catchError((e: HttpErrorResponse) => throwError(() => new Error(e.error?.error ?? 'No se pudo crear la cuenta'))));
   }
 
-  /** Cambia el nombre del usuario en la API y en la sesión. */
-  actualizarNombre(nombre: string): Observable<User> {
+  /** GET /auth/email-disponible?email=... (lo usa el validador asíncrono del registro). */
+  emailDisponible(email: string): Observable<boolean> {
+    return this.http
+      .get<{ disponible: boolean }>(`${this.url}/email-disponible`, { params: { email } })
+      .pipe(map((respuesta) => respuesta.disponible));
+  }
+
+  /** PATCH /users/:id con el nombre nuevo, y actualiza la sesión. */
+  actualizarNombre(nombre: string): Observable<UsuarioSesion> {
     const id = this._session()!.user.id;
     return this.http
-      .patch<User>(`${this.url}/${id}`, { nombre })
+      .patch<UsuarioSesion>(`${API_URL}/users/${id}`, { nombre })
       .pipe(tap((user) => this.guardarSesion(user)));
   }
 
@@ -66,7 +69,7 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  private guardarSesion({ password, ...user }: User): void {
+  private guardarSesion(user: UsuarioSesion): void {
     const sesion: Session = { user, inicio: this._session()?.inicio ?? new Date().toISOString() };
     localStorage.setItem('sesion', JSON.stringify(sesion));
     this._session.set(sesion);

@@ -31,6 +31,11 @@ export class SaleService {
     return this.http.get<Sale[]>(this.url).pipe(tap((ventas) => this._ventas.set(ventas)));
   }
 
+  /** GET /sales/:id (para editar una venta). */
+  obtener(id: number): Observable<Sale> {
+    return this.http.get<Sale>(`${this.url}/${id}`);
+  }
+
   crear(venta: Omit<Sale, 'id'>): Observable<Sale> {
     return this.http
       .post<Sale>(this.url, venta)

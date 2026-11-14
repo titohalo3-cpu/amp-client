@@ -1,35 +1,26 @@
-/**
- * Carga los datos de ejemplo (../db.original.json) en MongoDB.
- * Borra lo que haya y vuelve a insertar. Las contraseñas se guardan cifradas.
- * Uso: npm run seed
- */
+// Carga los datos de ejemplo (../db.original.json) en MongoDB. Uso: npm run seed
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const config = require('./config');
 const datos = require('../db.original.json');
 const Videojuego = require('./modelos/Videojuego');
 const Venta = require('./modelos/Venta');
 const Usuario = require('./modelos/Usuario');
 
-const conIdDeMongo = (lista) => lista.map(({ id, ...resto }) => ({ _id: id, ...resto }));
-
 async function cargar() {
-  await mongoose.connect(config.MONGO_URI);
+  await mongoose.connect('mongodb://root:example@localhost:27017/2daw?authSource=admin');
+  await Videojuego.deleteMany();
+  await Venta.deleteMany();
+  await Usuario.deleteMany();
 
-  const usuarios = await Promise.all(
-    conIdDeMongo(datos.users).map(async (u) => ({ ...u, password: await bcrypt.hash(u.password, 10) })),
-  );
+  // MongoDB crea un _id nuevo para cada documento; las ventas apuntan a esos _id nuevos
+  const nuevoId = {};
+  for (const { id, ...juego } of datos.videojuegos) nuevoId['v' + id] = (await new Videojuego(juego).save()).id;
+  for (const { id, ...usuario } of datos.usuarios) nuevoId['u' + id] = (await new Usuario(usuario).save()).id;
+  for (const { id, ...venta } of datos.ventas) {
+    await new Venta({ ...venta, videogameId: nuevoId['v' + venta.videogameId], userId: nuevoId['u' + venta.userId] }).save();
+  }
 
-  await Promise.all([Videojuego.deleteMany(), Venta.deleteMany(), Usuario.deleteMany()]);
-  await Videojuego.insertMany(conIdDeMongo(datos.videogames));
-  await Venta.insertMany(conIdDeMongo(datos.sales));
-  await Usuario.insertMany(usuarios);
-
-  console.log(`Cargados ${datos.videogames.length} videojuegos, ${datos.sales.length} ventas y ${usuarios.length} usuarios`);
+  console.log('Datos cargados en MongoDB');
   await mongoose.disconnect();
 }
 
-cargar().catch((err) => {
-  console.error('Error al cargar los datos. ¿Está MongoDB arrancado (docker compose up -d)?', err.message);
-  process.exit(1);
-});
+cargar();

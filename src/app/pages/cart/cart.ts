@@ -24,7 +24,7 @@ export class Cart {
 
   protected pagando = signal(false);
 
-  /** Convierte cada línea del carrito en una venta (POST /sales) y espera a todas. */
+  /** Convierte cada línea del carrito en una venta (POST /ventas) y espera a todas. */
   pagar(): void {
     const userId = this.auth.session()!.user.id;
     const hoy = new Date().toISOString().slice(0, 10);

@@ -49,7 +49,7 @@ export class Profile implements OnInit {
     this.sales.cargar().subscribe();
   }
 
-  titulo(id: number): string {
+  titulo(id: string): string {
     return this.juegos().find((j) => j.id === id)?.titulo ?? 'Juego eliminado';
   }
 

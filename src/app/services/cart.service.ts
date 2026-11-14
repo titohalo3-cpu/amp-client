@@ -33,7 +33,7 @@ export class CartService {
   }
 
   /** Quita una unidad. Si llega a 0, la línea desaparece. */
-  remove(id: number): void {
+  remove(id: string): void {
     this._items.update((items) =>
       items
         .map((i) => (i.videogame.id === id ? { ...i, cantidad: i.cantidad - 1 } : i))

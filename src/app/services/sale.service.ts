@@ -12,7 +12,7 @@ import { Sale } from '../models/sale.interface';
 @Injectable({ providedIn: 'root' })
 export class SaleService {
   private http = inject(HttpClient);
-  private url = `${API_URL}/sales`;
+  private url = `${API_URL}/ventas`;
 
   private readonly _ventas = signal<Sale[]>([]);
   readonly ventas = this._ventas.asReadonly();
@@ -31,8 +31,8 @@ export class SaleService {
     return this.http.get<Sale[]>(this.url).pipe(tap((ventas) => this._ventas.set(ventas)));
   }
 
-  /** GET /sales/:id (para editar una venta). */
-  obtener(id: number): Observable<Sale> {
+  /** GET /ventas/:id (para editar una venta). */
+  obtener(id: string): Observable<Sale> {
     return this.http.get<Sale>(`${this.url}/${id}`);
   }
 
@@ -48,7 +48,7 @@ export class SaleService {
       .pipe(tap((mod) => this._ventas.update((lista) => lista.map((v) => (v.id === mod.id ? mod : v)))));
   }
 
-  eliminar(id: number): Observable<void> {
+  eliminar(id: string): Observable<void> {
     return this.http
       .delete<void>(`${this.url}/${id}`)
       .pipe(tap(() => this._ventas.update((lista) => lista.filter((v) => v.id !== id))));

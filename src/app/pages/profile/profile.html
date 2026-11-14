@@ -45,7 +45,7 @@
           <tbody>
             @for (v of misCompras(); track v.id) {
               <tr>
-                <td>{{ v.id }}</td>
+                <td>{{ v.id.slice(-6) }}</td>
                 <td>{{ v.fecha | date: 'dd/MM/yyyy' }}</td>
                 <td>{{ titulo(v.videogameId) }}</td>
                 <td>{{ v.cantidad }}</td>

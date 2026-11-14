@@ -1,6 +1,6 @@
 <a routerLink="/admin" [queryParams]="{ pestana: 'ventas' }" class="volver">← Volver a gestión</a>
 <section class="cabecera">
-  <p class="kicker">{{ esNueva ? 'Alta' : 'Edición · #' + id }}</p>
+  <p class="kicker">{{ esNueva ? 'Alta' : 'Edición · #' + id.slice(-6) }}</p>
   <h1>{{ esNueva ? 'Nueva venta' : 'Editar venta' }}</h1>
 </section>
 
@@ -9,9 +9,9 @@
     <label class="doble">
       Videojuego
       <select formControlName="videogameId">
-        <option [ngValue]="0" disabled>Elige un videojuego</option>
+        <option value="" disabled>Elige un videojuego</option>
         @for (j of juegos(); track j.id) {
-          <option [ngValue]="j.id">{{ j.titulo }} · {{ j.stock }} en stock</option>
+          <option [value]="j.id">{{ j.titulo }} · {{ j.stock }} en stock</option>
         }
       </select>
       @if (invalido('videogameId')) {
@@ -22,9 +22,9 @@
     <label class="doble">
       Cliente
       <select formControlName="userId">
-        <option [ngValue]="0" disabled>Elige un usuario</option>
+        <option value="" disabled>Elige un usuario</option>
         @for (u of usuarios(); track u.id) {
-          <option [ngValue]="u.id">{{ u.nombre }} ({{ u.email }})</option>
+          <option [value]="u.id">{{ u.nombre }} ({{ u.email }})</option>
         }
       </select>
       @if (invalido('userId')) {

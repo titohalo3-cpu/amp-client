@@ -1,6 +1,6 @@
 <a routerLink="/admin" [queryParams]="{ pestana: 'juegos' }" class="volver">← Volver a gestión</a>
 <section class="cabecera">
-  <p class="kicker">{{ esNuevo ? 'Alta' : 'Edición · #' + id }}</p>
+  <p class="kicker">{{ esNuevo ? 'Alta' : 'Edición · #' + id.slice(-6) }}</p>
   <h1>{{ esNuevo ? 'Nuevo videojuego' : 'Editar videojuego' }}</h1>
 </section>
 

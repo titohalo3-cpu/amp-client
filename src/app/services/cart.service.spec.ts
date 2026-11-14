@@ -4,8 +4,8 @@ import { CartService } from './cart.service';
 
 describe('CartService', () => {
   let cart: CartService;
-  const juego = { id: 1, titulo: 'Juego de prueba', precio: 60, oferta: 50 } as Videogame;
-  const otro = { id: 2, titulo: 'Otro juego', precio: 10, oferta: 0 } as Videogame;
+  const juego = { id: 'a1', titulo: 'Juego de prueba', precio: 60, oferta: 50 } as Videogame;
+  const otro = { id: 'a2', titulo: 'Otro juego', precio: 10, oferta: 0 } as Videogame;
 
   beforeEach(() => {
     localStorage.clear(); // que no se cuele un carrito guardado
@@ -40,7 +40,7 @@ describe('CartService', () => {
 
   it('quita la línea cuando la cantidad llega a 0', () => {
     cart.add(juego);
-    cart.remove(1);
+    cart.remove('a1');
     expect(cart.items()).toEqual([]);
     expect(cart.totalUnidades()).toBe(0);
   });

@@ -22,7 +22,7 @@ npm start          # Angular en http://localhost:4200       (terminal 2)
 npm test           # pruebas con Karma + Jasmine
 ```
 
-Cuentas de prueba: admin@amp.es / admin123 · laura@amp.es / trabajo1 (trabajador) · mario@amp.es / cliente1 (cliente). En MongoDB las contraseñas se guardan cifradas con bcrypt.
+Cuentas de prueba: admin@amp.es / admin123 · laura@amp.es / trabajo1 (trabajador) · mario@amp.es / cliente1 (cliente).
 
 Versión online (modo demo: sin servidor, un interceptor simula la API en el navegador): https://titohalo3-cpu.github.io/amp-client/
 

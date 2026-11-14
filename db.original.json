@@ -1,37 +1,37 @@
 {
-  "users": [
+  "usuarios": [
     {
-      "id": 1,
+      "id": "1",
       "nombre": "Admin",
       "email": "admin@amp.es",
       "password": "admin123",
       "rol": "admin"
     },
     {
-      "id": 2,
+      "id": "2",
       "nombre": "Laura",
       "email": "laura@amp.es",
       "password": "trabajo1",
       "rol": "trabajador"
     },
     {
-      "id": 3,
+      "id": "3",
       "nombre": "Mario",
       "email": "mario@amp.es",
       "password": "cliente1",
       "rol": "cliente"
     },
     {
-      "id": 4,
+      "id": "4",
       "nombre": "Lucía",
       "email": "lucia@amp.es",
       "password": "cliente2",
       "rol": "cliente"
     }
   ],
-  "videogames": [
+  "videojuegos": [
     {
-      "id": 1,
+      "id": "1",
       "titulo": "Hollow Knight",
       "genero": "Metroidvania",
       "plataformas": [
@@ -47,7 +47,7 @@
       "stock": 13
     },
     {
-      "id": 2,
+      "id": "2",
       "titulo": "Elden Ring",
       "genero": "RPG",
       "plataformas": [
@@ -64,7 +64,7 @@
       "stock": 60
     },
     {
-      "id": 3,
+      "id": "3",
       "titulo": "Stardew Valley",
       "genero": "Simulación",
       "plataformas": [
@@ -81,7 +81,7 @@
       "stock": 20
     },
     {
-      "id": 4,
+      "id": "4",
       "titulo": "Hades II",
       "genero": "Roguelike",
       "plataformas": [
@@ -97,7 +97,7 @@
       "stock": 20
     },
     {
-      "id": 5,
+      "id": "5",
       "titulo": "Celeste",
       "genero": "Plataformas",
       "plataformas": [
@@ -113,7 +113,7 @@
       "stock": 44
     },
     {
-      "id": 6,
+      "id": "6",
       "titulo": "The Witcher 3",
       "genero": "RPG",
       "plataformas": [
@@ -131,7 +131,7 @@
       "stock": 55
     },
     {
-      "id": 7,
+      "id": "7",
       "titulo": "Baldur's Gate 3",
       "genero": "RPG",
       "plataformas": [
@@ -147,7 +147,7 @@
       "stock": 25
     },
     {
-      "id": 8,
+      "id": "8",
       "titulo": "Cyberpunk 2077",
       "genero": "Acción",
       "plataformas": [
@@ -164,7 +164,7 @@
       "stock": 19
     },
     {
-      "id": 9,
+      "id": "9",
       "titulo": "Mario Kart 8 Deluxe",
       "genero": "Carreras",
       "plataformas": [
@@ -179,7 +179,7 @@
       "stock": 34
     },
     {
-      "id": 10,
+      "id": "10",
       "titulo": "Forza Horizon 5",
       "genero": "Carreras",
       "plataformas": [
@@ -196,7 +196,7 @@
       "stock": 41
     },
     {
-      "id": 11,
+      "id": "11",
       "titulo": "EA Sports FC 26",
       "genero": "Deportes",
       "plataformas": [
@@ -213,7 +213,7 @@
       "stock": 33
     },
     {
-      "id": 12,
+      "id": "12",
       "titulo": "Minecraft",
       "genero": "Sandbox",
       "plataformas": [
@@ -231,7 +231,7 @@
       "stock": 35
     },
     {
-      "id": 13,
+      "id": "13",
       "titulo": "Hollow Knight: Silksong",
       "genero": "Metroidvania",
       "plataformas": [
@@ -248,7 +248,7 @@
       "stock": 21
     },
     {
-      "id": 14,
+      "id": "14",
       "titulo": "Resident Evil 4",
       "genero": "Terror",
       "plataformas": [
@@ -265,7 +265,7 @@
       "stock": 11
     },
     {
-      "id": 15,
+      "id": "15",
       "titulo": "Portal 2",
       "genero": "Puzles",
       "plataformas": [
@@ -280,7 +280,7 @@
       "stock": 18
     },
     {
-      "id": 16,
+      "id": "16",
       "titulo": "It Takes Two",
       "genero": "Aventura",
       "plataformas": [
@@ -298,7 +298,7 @@
       "stock": 28
     },
     {
-      "id": 17,
+      "id": "17",
       "titulo": "Split Fiction",
       "genero": "Aventura",
       "plataformas": [
@@ -315,7 +315,7 @@
       "stock": 38
     },
     {
-      "id": 18,
+      "id": "18",
       "titulo": "Animal Crossing: New Horizons",
       "genero": "Simulación",
       "plataformas": [
@@ -330,11 +330,11 @@
       "stock": 16
     }
   ],
-  "sales": [
+  "ventas": [
     {
-      "id": 1,
-      "videogameId": 2,
-      "userId": 3,
+      "id": "1",
+      "videogameId": "2",
+      "userId": "3",
       "cantidad": 2,
       "precioUnitario": 44.99,
       "total": 89.98,
@@ -342,9 +342,9 @@
       "estado": "pendiente"
     },
     {
-      "id": 2,
-      "videogameId": 11,
-      "userId": 4,
+      "id": "2",
+      "videogameId": "11",
+      "userId": "4",
       "cantidad": 2,
       "precioUnitario": 55.99,
       "total": 111.98,
@@ -352,9 +352,9 @@
       "estado": "pendiente"
     },
     {
-      "id": 3,
-      "videogameId": 7,
-      "userId": 3,
+      "id": "3",
+      "videogameId": "7",
+      "userId": "3",
       "cantidad": 1,
       "precioUnitario": 59.99,
       "total": 59.99,
@@ -362,9 +362,9 @@
       "estado": "completada"
     },
     {
-      "id": 4,
-      "videogameId": 2,
-      "userId": 4,
+      "id": "4",
+      "videogameId": "2",
+      "userId": "4",
       "cantidad": 1,
       "precioUnitario": 44.99,
       "total": 44.99,
@@ -372,9 +372,9 @@
       "estado": "completada"
     },
     {
-      "id": 5,
-      "videogameId": 6,
-      "userId": 3,
+      "id": "5",
+      "videogameId": "6",
+      "userId": "3",
       "cantidad": 1,
       "precioUnitario": 9.0,
       "total": 9.0,
@@ -382,9 +382,9 @@
       "estado": "completada"
     },
     {
-      "id": 6,
-      "videogameId": 9,
-      "userId": 4,
+      "id": "6",
+      "videogameId": "9",
+      "userId": "4",
       "cantidad": 1,
       "precioUnitario": 59.99,
       "total": 59.99,
@@ -392,9 +392,9 @@
       "estado": "pendiente"
     },
     {
-      "id": 7,
-      "videogameId": 12,
-      "userId": 3,
+      "id": "7",
+      "videogameId": "12",
+      "userId": "3",
       "cantidad": 2,
       "precioUnitario": 29.99,
       "total": 59.98,
@@ -402,9 +402,9 @@
       "estado": "pendiente"
     },
     {
-      "id": 8,
-      "videogameId": 6,
-      "userId": 4,
+      "id": "8",
+      "videogameId": "6",
+      "userId": "4",
       "cantidad": 2,
       "precioUnitario": 9.0,
       "total": 18.0,
@@ -412,9 +412,9 @@
       "estado": "completada"
     },
     {
-      "id": 9,
-      "videogameId": 15,
-      "userId": 4,
+      "id": "9",
+      "videogameId": "15",
+      "userId": "4",
       "cantidad": 2,
       "precioUnitario": 2.0,
       "total": 4.0,
@@ -422,9 +422,9 @@
       "estado": "cancelada"
     },
     {
-      "id": 10,
-      "videogameId": 4,
-      "userId": 4,
+      "id": "10",
+      "videogameId": "4",
+      "userId": "4",
       "cantidad": 2,
       "precioUnitario": 29.99,
       "total": 59.98,
@@ -432,9 +432,9 @@
       "estado": "completada"
     },
     {
-      "id": 11,
-      "videogameId": 1,
-      "userId": 3,
+      "id": "11",
+      "videogameId": "1",
+      "userId": "3",
       "cantidad": 1,
       "precioUnitario": 10.49,
       "total": 10.49,
@@ -442,9 +442,9 @@
       "estado": "completada"
     },
     {
-      "id": 12,
-      "videogameId": 12,
-      "userId": 4,
+      "id": "12",
+      "videogameId": "12",
+      "userId": "4",
       "cantidad": 3,
       "precioUnitario": 29.99,
       "total": 89.97,
@@ -452,9 +452,9 @@
       "estado": "completada"
     },
     {
-      "id": 13,
-      "videogameId": 15,
-      "userId": 4,
+      "id": "13",
+      "videogameId": "15",
+      "userId": "4",
       "cantidad": 1,
       "precioUnitario": 2.0,
       "total": 2.0,
@@ -462,9 +462,9 @@
       "estado": "cancelada"
     },
     {
-      "id": 14,
-      "videogameId": 18,
-      "userId": 4,
+      "id": "14",
+      "videogameId": "18",
+      "userId": "4",
       "cantidad": 2,
       "precioUnitario": 59.99,
       "total": 119.98,
@@ -472,9 +472,9 @@
       "estado": "cancelada"
     },
     {
-      "id": 15,
-      "videogameId": 9,
-      "userId": 4,
+      "id": "15",
+      "videogameId": "9",
+      "userId": "4",
       "cantidad": 3,
       "precioUnitario": 59.99,
       "total": 179.97,
@@ -482,9 +482,9 @@
       "estado": "pendiente"
     },
     {
-      "id": 16,
-      "videogameId": 7,
-      "userId": 3,
+      "id": "16",
+      "videogameId": "7",
+      "userId": "3",
       "cantidad": 1,
       "precioUnitario": 59.99,
       "total": 59.99,
@@ -492,9 +492,9 @@
       "estado": "completada"
     },
     {
-      "id": 17,
-      "videogameId": 15,
-      "userId": 4,
+      "id": "17",
+      "videogameId": "15",
+      "userId": "4",
       "cantidad": 2,
       "precioUnitario": 2.0,
       "total": 4.0,
@@ -502,9 +502,9 @@
       "estado": "cancelada"
     },
     {
-      "id": 18,
-      "videogameId": 4,
-      "userId": 4,
+      "id": "18",
+      "videogameId": "4",
+      "userId": "4",
       "cantidad": 2,
       "precioUnitario": 29.99,
       "total": 59.98,
@@ -512,9 +512,9 @@
       "estado": "completada"
     },
     {
-      "id": 19,
-      "videogameId": 12,
-      "userId": 4,
+      "id": "19",
+      "videogameId": "12",
+      "userId": "4",
       "cantidad": 1,
       "precioUnitario": 29.99,
       "total": 29.99,
@@ -522,9 +522,9 @@
       "estado": "cancelada"
     },
     {
-      "id": 20,
-      "videogameId": 2,
-      "userId": 4,
+      "id": "20",
+      "videogameId": "2",
+      "userId": "4",
       "cantidad": 3,
       "precioUnitario": 44.99,
       "total": 134.97,
@@ -532,9 +532,9 @@
       "estado": "cancelada"
     },
     {
-      "id": 21,
-      "videogameId": 3,
-      "userId": 3,
+      "id": "21",
+      "videogameId": "3",
+      "userId": "3",
       "cantidad": 2,
       "precioUnitario": 13.99,
       "total": 27.98,
@@ -542,9 +542,9 @@
       "estado": "completada"
     },
     {
-      "id": 22,
-      "videogameId": 8,
-      "userId": 4,
+      "id": "22",
+      "videogameId": "8",
+      "userId": "4",
       "cantidad": 1,
       "precioUnitario": 29.99,
       "total": 29.99,
@@ -552,9 +552,9 @@
       "estado": "completada"
     },
     {
-      "id": 23,
-      "videogameId": 1,
-      "userId": 3,
+      "id": "23",
+      "videogameId": "1",
+      "userId": "3",
       "cantidad": 1,
       "precioUnitario": 10.49,
       "total": 10.49,
@@ -562,9 +562,9 @@
       "estado": "pendiente"
     },
     {
-      "id": 24,
-      "videogameId": 4,
-      "userId": 4,
+      "id": "24",
+      "videogameId": "4",
+      "userId": "4",
       "cantidad": 2,
       "precioUnitario": 29.99,
       "total": 59.98,
@@ -572,9 +572,9 @@
       "estado": "pendiente"
     },
     {
-      "id": 25,
-      "videogameId": 6,
-      "userId": 4,
+      "id": "25",
+      "videogameId": "6",
+      "userId": "4",
       "cantidad": 1,
       "precioUnitario": 9.0,
       "total": 9.0,
@@ -582,9 +582,9 @@
       "estado": "pendiente"
     },
     {
-      "id": 26,
-      "videogameId": 2,
-      "userId": 3,
+      "id": "26",
+      "videogameId": "2",
+      "userId": "3",
       "cantidad": 1,
       "precioUnitario": 44.99,
       "total": 44.99,
@@ -592,9 +592,9 @@
       "estado": "pendiente"
     },
     {
-      "id": 27,
-      "videogameId": 8,
-      "userId": 3,
+      "id": "27",
+      "videogameId": "8",
+      "userId": "3",
       "cantidad": 1,
       "precioUnitario": 29.99,
       "total": 29.99,
@@ -602,9 +602,9 @@
       "estado": "pendiente"
     },
     {
-      "id": 28,
-      "videogameId": 16,
-      "userId": 4,
+      "id": "28",
+      "videogameId": "16",
+      "userId": "4",
       "cantidad": 1,
       "precioUnitario": 39.99,
       "total": 39.99,
@@ -612,9 +612,9 @@
       "estado": "pendiente"
     },
     {
-      "id": 29,
-      "videogameId": 9,
-      "userId": 3,
+      "id": "29",
+      "videogameId": "9",
+      "userId": "3",
       "cantidad": 1,
       "precioUnitario": 59.99,
       "total": 59.99,
@@ -622,9 +622,9 @@
       "estado": "completada"
     },
     {
-      "id": 30,
-      "videogameId": 1,
-      "userId": 3,
+      "id": "30",
+      "videogameId": "1",
+      "userId": "3",
       "cantidad": 1,
       "precioUnitario": 10.49,
       "total": 10.49,
@@ -632,9 +632,9 @@
       "estado": "completada"
     },
     {
-      "id": 31,
-      "videogameId": 6,
-      "userId": 4,
+      "id": "31",
+      "videogameId": "6",
+      "userId": "4",
       "cantidad": 1,
       "precioUnitario": 9.0,
       "total": 9.0,
@@ -642,9 +642,9 @@
       "estado": "completada"
     },
     {
-      "id": 32,
-      "videogameId": 7,
-      "userId": 3,
+      "id": "32",
+      "videogameId": "7",
+      "userId": "3",
       "cantidad": 2,
       "precioUnitario": 59.99,
       "total": 119.98,
@@ -652,9 +652,9 @@
       "estado": "completada"
     },
     {
-      "id": 33,
-      "videogameId": 7,
-      "userId": 3,
+      "id": "33",
+      "videogameId": "7",
+      "userId": "3",
       "cantidad": 1,
       "precioUnitario": 59.99,
       "total": 59.99,
@@ -662,9 +662,9 @@
       "estado": "pendiente"
     },
     {
-      "id": 34,
-      "videogameId": 9,
-      "userId": 3,
+      "id": "34",
+      "videogameId": "9",
+      "userId": "3",
       "cantidad": 1,
       "precioUnitario": 59.99,
       "total": 59.99,
@@ -672,9 +672,9 @@
       "estado": "completada"
     },
     {
-      "id": 35,
-      "videogameId": 16,
-      "userId": 3,
+      "id": "35",
+      "videogameId": "16",
+      "userId": "3",
       "cantidad": 1,
       "precioUnitario": 39.99,
       "total": 39.99,
@@ -682,9 +682,9 @@
       "estado": "pendiente"
     },
     {
-      "id": 36,
-      "videogameId": 15,
-      "userId": 3,
+      "id": "36",
+      "videogameId": "15",
+      "userId": "3",
       "cantidad": 1,
       "precioUnitario": 2.0,
       "total": 2.0,
@@ -692,9 +692,9 @@
       "estado": "pendiente"
     },
     {
-      "id": 37,
-      "videogameId": 15,
-      "userId": 3,
+      "id": "37",
+      "videogameId": "15",
+      "userId": "3",
       "cantidad": 1,
       "precioUnitario": 2.0,
       "total": 2.0,
@@ -702,9 +702,9 @@
       "estado": "completada"
     },
     {
-      "id": 38,
-      "videogameId": 9,
-      "userId": 4,
+      "id": "38",
+      "videogameId": "9",
+      "userId": "4",
       "cantidad": 1,
       "precioUnitario": 59.99,
       "total": 59.99,
@@ -712,9 +712,9 @@
       "estado": "completada"
     },
     {
-      "id": 39,
-      "videogameId": 4,
-      "userId": 4,
+      "id": "39",
+      "videogameId": "4",
+      "userId": "4",
       "cantidad": 2,
       "precioUnitario": 29.99,
       "total": 59.98,
@@ -722,9 +722,9 @@
       "estado": "completada"
     },
     {
-      "id": 40,
-      "videogameId": 9,
-      "userId": 4,
+      "id": "40",
+      "videogameId": "9",
+      "userId": "4",
       "cantidad": 2,
       "precioUnitario": 59.99,
       "total": 119.98,

@@ -7,15 +7,15 @@ import { Rol, Session, UsuarioSesion } from '../models/user.interface';
 
 /**
  * Sesión del usuario: login, registro, logout, rol y permisos.
- * La contraseña se comprueba en el SERVIDOR (Express + bcrypt): el navegador
- * nunca recibe contraseñas. La sesión vive en una signal y se copia en
- * localStorage para que siga al recargar la página.
+ * La contraseña la comprueba el servidor Express (POST /usuarios/login),
+ * que nunca devuelve contraseñas. La sesión vive en una signal y se copia
+ * en localStorage para que siga al recargar la página.
  */
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private url = `${API_URL}/auth`;
+  private url = `${API_URL}/usuarios`;
 
   // Signal privada: solo este servicio puede cambiarla.
   private readonly _session = signal<Session | null>(this.leerSesion());
@@ -25,7 +25,7 @@ export class AuthService {
   readonly isLogged = computed(() => this._session() !== null);
   readonly rol = computed(() => this._session()?.user.rol ?? null);
 
-  /** POST /auth/login. Devuelve true si entra y false si el email o la contraseña no son correctos. */
+  /** POST /usuarios/login. Devuelve true si entra y false si el email o la contraseña no son correctos. */
   login(email: string, password: string): Observable<boolean> {
     return this.http.post<UsuarioSesion>(`${this.url}/login`, { email, password }).pipe(
       tap((user) => this.guardarSesion(user)),
@@ -35,26 +35,22 @@ export class AuthService {
     );
   }
 
-  /** POST /auth/registro. El servidor cifra la contraseña y pone el rol cliente. */
-  register(datos: { nombre: string; email: string; password: string }): Observable<UsuarioSesion> {
+  /** POST /usuarios/registro. El servidor pone el rol cliente. */
+  register(datos: { nombre: string; email: string; password: string }): Observable<unknown> {
     return this.http
-      .post<UsuarioSesion>(`${this.url}/registro`, datos)
-      .pipe(catchError((e: HttpErrorResponse) => throwError(() => new Error(e.error?.error ?? 'No se pudo crear la cuenta'))));
+      .post(`${this.url}/registro`, datos)
+      .pipe(catchError((e: HttpErrorResponse) => throwError(() => new Error(e.error?.status ?? 'No se pudo crear la cuenta'))));
   }
 
-  /** GET /auth/email-disponible?email=... (lo usa el validador asíncrono del registro). */
+  /** GET /usuarios?email=... → true si nadie tiene ese email (lo usa el validador asíncrono del registro). */
   emailDisponible(email: string): Observable<boolean> {
-    return this.http
-      .get<{ disponible: boolean }>(`${this.url}/email-disponible`, { params: { email } })
-      .pipe(map((respuesta) => respuesta.disponible));
+    return this.http.get<UsuarioSesion[]>(this.url, { params: { email } }).pipe(map((lista) => lista.length === 0));
   }
 
-  /** PATCH /users/:id con el nombre nuevo, y actualiza la sesión. */
+  /** PUT /usuarios/:id con el nombre nuevo, y actualiza la sesión. */
   actualizarNombre(nombre: string): Observable<UsuarioSesion> {
     const id = this._session()!.user.id;
-    return this.http
-      .patch<UsuarioSesion>(`${API_URL}/users/${id}`, { nombre })
-      .pipe(tap((user) => this.guardarSesion(user)));
+    return this.http.put<UsuarioSesion>(`${this.url}/${id}`, { nombre }).pipe(tap((user) => this.guardarSesion(user)));
   }
 
   /** ¿El usuario tiene alguno de estos roles? */

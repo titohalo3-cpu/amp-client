@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const ControladorUsuarios = require('../controladores/controladorUsuarios');
 
+router.post('/login', ControladorUsuarios.login);
+router.post('/registro', ControladorUsuarios.crearUsuario);
 router.get('/', ControladorUsuarios.getUsuarios);
-router.get('/:id', ControladorUsuarios.getUsuario);
-router.patch('/:id', ControladorUsuarios.actualizarUsuario); // cambia solo los campos enviados
+router.put('/:id', ControladorUsuarios.actualizarUsuario);
 router.delete('/:id', ControladorUsuarios.eliminarUsuario);
-
 module.exports = router;

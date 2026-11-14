@@ -43,7 +43,7 @@ export class Dashboard {
 
   /** Los 5 juegos con más unidades vendidas (sin contar canceladas). */
   protected topVendidos = computed(() => {
-    const unidades = new Map<number, number>();
+    const unidades = new Map<string, number>();
     for (const v of this.sales.validas()) {
       unidades.set(v.videogameId, (unidades.get(v.videogameId) ?? 0) + v.cantidad);
     }

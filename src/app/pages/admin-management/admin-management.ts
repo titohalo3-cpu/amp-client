@@ -67,7 +67,7 @@ export class AdminManagement implements OnInit {
     }
   }
 
-  titulo(id: number): string {
+  titulo(id: string): string {
     return this.juegos().find((j) => j.id === id)?.titulo ?? `Juego #${id} (eliminado)`;
   }
 
@@ -97,7 +97,7 @@ export class AdminManagement implements OnInit {
   cambiarEstado(venta: Sale, estado: string): void {
     this.sales
       .modificar({ ...venta, estado: estado as EstadoVenta })
-      .subscribe(() => this.avisos.ok(`Venta #${venta.id}: ${estado}`));
+      .subscribe(() => this.avisos.ok(`Venta #${venta.id.slice(-6)}: ${estado}`));
   }
 
   cambiarCantidad(venta: Sale, valor: string): void {
@@ -109,12 +109,12 @@ export class AdminManagement implements OnInit {
     const total = Math.round(venta.precioUnitario * cantidad * 100) / 100;
     this.sales
       .modificar({ ...venta, cantidad, total })
-      .subscribe(() => this.avisos.ok(`Venta #${venta.id}: ${cantidad} uds.`));
+      .subscribe(() => this.avisos.ok(`Venta #${venta.id.slice(-6)}: ${cantidad} uds.`));
   }
 
   eliminarVenta(venta: Sale): void {
-    if (!confirm(`¿Eliminar la venta #${venta.id}?`)) return;
-    this.sales.eliminar(venta.id).subscribe(() => this.avisos.ok(`Venta #${venta.id} eliminada`));
+    if (!confirm(`¿Eliminar la venta #${venta.id.slice(-6)}?`)) return;
+    this.sales.eliminar(venta.id).subscribe(() => this.avisos.ok(`Venta #${venta.id.slice(-6)} eliminada`));
   }
 
   // ---------- Acciones de usuarios ----------

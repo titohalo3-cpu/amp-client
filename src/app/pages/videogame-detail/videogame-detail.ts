@@ -31,7 +31,7 @@ export class VideogameDetail {
    */
   protected juego = toSignal(
     this.route.paramMap.pipe(
-      map((params) => Number(params.get('id'))),
+      map((params) => params.get('id')!),
       switchMap((id) => this.juegosSrv.getById(id).pipe(catchError(() => of(null)))),
     ),
   );

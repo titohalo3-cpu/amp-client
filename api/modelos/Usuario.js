@@ -1,15 +1,10 @@
 const mongoose = require('mongoose');
-const opciones = require('./opciones');
 
-const usuarioSchema = new mongoose.Schema(
-  {
-    _id: Number,
-    nombre: { type: String, required: true, trim: true, minlength: 3 },
-    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-    password: { type: String, required: true }, // guardada cifrada con bcrypt
-    rol: { type: String, enum: ['admin', 'trabajador', 'cliente'], default: 'cliente' },
-  },
-  opciones,
-);
+const usuarioSchema = new mongoose.Schema({
+  nombre: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  rol: { type: String, default: 'cliente' }
+}, { toJSON: { virtuals: true } });
 
-module.exports = mongoose.model('Usuario', usuarioSchema, 'usuarios');
+module.exports = mongoose.model('Usuario', usuarioSchema);

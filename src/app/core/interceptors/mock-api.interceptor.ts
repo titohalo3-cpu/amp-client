@@ -3,7 +3,7 @@ import { Observable, delay, of, switchMap, throwError, timer } from 'rxjs';
 import datosIniciales from '../../../../db.original.json';
 import { API_URL } from '../../api.config';
 
-type Registro = { id: number; [campo: string]: unknown };
+type Registro = { id: string; [campo: string]: unknown };
 type BaseDatos = Record<string, Registro[]>;
 
 const CLAVE = 'amp-db';
@@ -11,78 +11,64 @@ const RETARDO = 200; // ms, para que se note que es asíncrono como una petició
 
 /**
  * MODO DEMO (solo en la versión publicada, donde no hay servidor Express).
- * Simula la API Express dentro del navegador: responde a las mismas URLs
- * (GET, POST, PUT, PATCH, DELETE, filtros y /auth) con los datos
- * de db.original.json y guarda los cambios en localStorage.
+ * Simula la API dentro del navegador: responde a las mismas URLs
+ * (/videojuegos, /ventas, /usuarios, /usuarios/login y /usuarios/registro)
+ * con los datos de db.original.json y guarda los cambios en localStorage.
  * Los servicios no cambian nada: siguen usando HttpClient y Observables.
  */
 export const mockApiInterceptor: HttpInterceptorFn = (req, next) => {
-  // Las contraseñas de db.original.json están en claro solo para esta demo; Express las guarda con bcrypt.
   if (!req.url.startsWith(API_URL)) return next(req);
 
-  const [coleccion, idTexto] = req.url.slice(API_URL.length + 1).split('/');
+  const [coleccion, id] = req.url.slice(API_URL.length + 1).split('/');
   const bd = leerBD();
-  if (coleccion === 'auth') return auth(req, idTexto, bd);
+  if (coleccion === 'usuarios' && (id === 'login' || id === 'registro')) return auth(req, id, bd);
   const lista = bd[coleccion];
   if (!lista) return error(404, req);
-
-  const id = idTexto ? Number(idTexto) : null;
-  const indice = id === null ? -1 : lista.findIndex((r) => r.id === id);
+  const indice = id ? lista.findIndex((r) => r.id === id) : -1;
 
   switch (req.method) {
     case 'GET': {
-      if (id !== null) return indice >= 0 ? ok(coleccion === 'users' ? sinPassword(lista[indice]) : lista[indice]) : error(404, req);
-      const filtros = req.params.keys();
-      const resultado = lista.filter((r) => filtros.every((k) => String(r[k]) === req.params.get(k)));
-      return ok(coleccion === 'users' ? resultado.map(sinPassword) : resultado);
+      if (id) return indice >= 0 ? ok(sinPassword(lista[indice])) : error(404, req);
+      const filtros = req.params.keys(); // por ejemplo ?email=...
+      return ok(lista.filter((r) => filtros.every((k) => String(r[k]) === req.params.get(k))).map(sinPassword));
     }
     case 'POST': {
-      const nuevo = { ...(req.body as object), id: Math.max(0, ...lista.map((r) => r.id)) + 1 } as Registro;
+      const nuevo = { ...(req.body as object), id: String(Date.now()) } as Registro;
       lista.push(nuevo);
       guardarBD(bd);
       return ok(nuevo, 201);
     }
-    case 'PUT':
-    case 'PATCH': {
+    case 'PUT': {
       if (indice < 0) return error(404, req);
-      const anterior = req.method === 'PATCH' ? lista[indice] : {};
-      lista[indice] = { ...anterior, ...(req.body as object), id: id! } as Registro;
+      lista[indice] = { ...lista[indice], ...(req.body as object), id } as Registro; // como findByIdAndUpdate
       guardarBD(bd);
-      return ok(coleccion === 'users' ? sinPassword(lista[indice]) : lista[indice]);
+      return ok(sinPassword(lista[indice]));
     }
     case 'DELETE': {
       if (indice < 0) return error(404, req);
       lista.splice(indice, 1);
       guardarBD(bd);
-      return ok({});
+      return ok({ status: 'operación realizada' });
     }
   }
   return error(405, req);
 };
 
-/** Simula las rutas /auth de Express (login, registro y email-disponible). */
+/** Simula POST /usuarios/login y POST /usuarios/registro. */
 function auth(req: HttpRequest<unknown>, accion: string, bd: BaseDatos): Observable<HttpResponse<unknown>> {
-  const usuarios = bd['users'];
+  const usuarios = bd['usuarios'];
   const cuerpo = (req.body ?? {}) as Record<string, string>;
-  const buscar = (email: string) => usuarios.find((u) => String(u['email']).toLowerCase() === email.toLowerCase());
+  const existente = usuarios.find((u) => u['email'] === cuerpo['email']);
 
   if (accion === 'login') {
-    const usuario = buscar(cuerpo['email'] ?? '');
-    return usuario && usuario['password'] === cuerpo['password']
-      ? ok(sinPassword(usuario))
-      : error(401, req, 'Email o contraseña incorrectos');
+    return existente && existente['password'] === cuerpo['password']
+      ? ok(sinPassword(existente))
+      : error(401, req, 'Usuario/clave invalida');
   }
-  if (accion === 'registro') {
-    if (buscar(cuerpo['email'] ?? '')) return error(409, req, 'Ese email ya está registrado');
-    const nuevo: Registro = { ...cuerpo, rol: 'cliente', id: Math.max(0, ...usuarios.map((u) => u.id)) + 1 };
-    usuarios.push(nuevo);
-    guardarBD(bd);
-    return ok(sinPassword(nuevo), 201);
-  }
-  if (accion.startsWith('email-disponible')) {
-    return ok({ disponible: !buscar(req.params.get('email') ?? '') });
-  }
-  return error(404, req);
+  if (existente) return error(400, req, 'Error al crear el usuario');
+  usuarios.push({ ...cuerpo, rol: 'cliente', id: String(Date.now()) });
+  guardarBD(bd);
+  return ok({ status: 'usuario creado' }, 201);
 }
 
 function sinPassword({ password, ...resto }: Registro): Registro {
@@ -119,7 +105,7 @@ function ok<T>(body: T, status = 200): Observable<HttpResponse<T>> {
 function error(status: number, req: HttpRequest<unknown>, mensaje?: string): Observable<never> {
   return timer(RETARDO).pipe(
     switchMap(() =>
-      throwError(() => new HttpErrorResponse({ status, url: req.url, statusText: 'Error', error: mensaje ? { error: mensaje } : null })),
+      throwError(() => new HttpErrorResponse({ status, url: req.url, statusText: 'Error', error: mensaje ? { status: mensaje } : null })),
     ),
   );
 }

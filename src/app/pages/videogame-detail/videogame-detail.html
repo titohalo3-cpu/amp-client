@@ -16,7 +16,7 @@
         <div><dt>Plataformas</dt><dd>{{ j.plataformas.join(' · ') }}</dd></div>
         <div><dt>Lanzamiento</dt><dd>{{ j.fechaLanzamiento | date: 'longDate' }}</dd></div>
         <div><dt>Stock</dt><dd>{{ j.stock }} unidades</dd></div>
-        <div><dt>Referencia</dt><dd>#{{ j.id }}</dd></div>
+        <div><dt>Referencia</dt><dd>#{{ j.id.slice(-6) }}</dd></div>
       </dl>
       <p class="precio grande">
         @if (j.oferta > 0) {

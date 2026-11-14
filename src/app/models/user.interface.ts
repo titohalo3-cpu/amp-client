@@ -3,7 +3,7 @@ export type Rol = 'admin' | 'trabajador' | 'cliente';
 
 /** Usuario tal y como está guardado en db.json. */
 export interface User {
-  id: number;
+  id: string;
   nombre: string;
   email: string;
   password: string;

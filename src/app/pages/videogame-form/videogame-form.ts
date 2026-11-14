@@ -53,7 +53,7 @@ export class VideogameForm {
     if (this.esNuevo) {
       this.agregarPlataforma('PC');
     } else {
-      this.juegosSrv.getById(Number(this.id)).subscribe(({ plataformas, ...resto }) => {
+      this.juegosSrv.getById(this.id).subscribe(({ plataformas, ...resto }) => {
         this.form.patchValue(resto); // rellena los campos que coinciden por nombre
         plataformas.forEach((p) => this.agregarPlataforma(p)); // un control por plataforma
       });
@@ -81,7 +81,7 @@ export class VideogameForm {
     const datos = this.form.getRawValue(); // plataformas ya es un array de strings
     const peticion = this.esNuevo
       ? this.juegosSrv.create(datos)
-      : this.juegosSrv.update({ ...datos, id: Number(this.id) });
+      : this.juegosSrv.update({ ...datos, id: this.id });
 
     this.guardando.set(true);
     peticion.subscribe({

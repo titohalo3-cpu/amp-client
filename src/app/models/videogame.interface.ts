@@ -1,6 +1,6 @@
 /** Un videojuego del catálogo. */
 export interface Videogame {
-  id: number;
+  id: string; // el _id de MongoDB como texto
   titulo: string;
   genero: string;
   plataformas: string[];

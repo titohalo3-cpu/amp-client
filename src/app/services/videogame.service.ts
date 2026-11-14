@@ -23,13 +23,13 @@ export interface OfertasEnDirecto {
 @Injectable({ providedIn: 'root' })
 export class VideogameService {
   private http = inject(HttpClient);
-  private url = `${API_URL}/videogames`;
+  private url = `${API_URL}/videojuegos`;
 
   getAll(): Observable<Videogame[]> {
     return this.http.get<Videogame[]>(this.url);
   }
 
-  getById(id: number): Observable<Videogame> {
+  getById(id: string): Observable<Videogame> {
     return this.http.get<Videogame>(`${this.url}/${id}`);
   }
 
@@ -41,7 +41,7 @@ export class VideogameService {
     return this.http.put<Videogame>(`${this.url}/${juego.id}`, juego);
   }
 
-  delete(id: number): Observable<void> {
+  delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.url}/${id}`);
   }
 

@@ -43,8 +43,8 @@ export class SaleForm {
 
   protected form = this.fb.group(
     {
-      videogameId: [0, [Validators.required, Validators.min(1)]],
-      userId: [0, [Validators.required, Validators.min(1)]],
+      videogameId: ['', Validators.required],
+      userId: ['', Validators.required],
       cantidad: [1, [Validators.required, Validators.min(1), Validators.pattern(/^\d+$/)]],
       precioUnitario: [0, [Validators.required, Validators.min(0)]],
       fecha: [new Date().toISOString().slice(0, 10), [Validators.required, fechaNoFutura]],
@@ -57,7 +57,7 @@ export class SaleForm {
   /** El valor del formulario como signal: cada vez que se escribe, se actualiza. */
   private valores = toSignal(this.form.valueChanges, { initialValue: this.form.getRawValue() });
 
-  protected juegoElegido = computed(() => this.juegos().find((j) => j.id === Number(this.valores().videogameId)));
+  protected juegoElegido = computed(() => this.juegos().find((j) => j.id === this.valores().videogameId));
   protected total = computed(() => {
     const { cantidad = 0, precioUnitario = 0 } = this.valores();
     return Math.round(Number(cantidad) * Number(precioUnitario) * 100) / 100;
@@ -67,14 +67,14 @@ export class SaleForm {
     // Cuando el USUARIO elige otro juego, se pone su precio actual (con la oferta aplicada).
     // Si el cambio lo hace el código (al cargar una venta), no es "dirty" y se respeta el precio guardado.
     this.form.controls.videogameId.valueChanges.pipe(takeUntilDestroyed()).subscribe((id) => {
-      const juego = this.juegos().find((j) => j.id === Number(id));
+      const juego = this.juegos().find((j) => j.id === id);
       if (juego && this.form.controls.videogameId.dirty) {
         this.form.controls.precioUnitario.setValue(precioFinal(juego));
       }
     });
 
     if (!this.esNueva) {
-      this.sales.obtener(Number(this.id)).subscribe((venta) => this.form.patchValue(venta));
+      this.sales.obtener(this.id).subscribe((venta) => this.form.patchValue(venta));
     }
   }
 
@@ -89,13 +89,13 @@ export class SaleForm {
       return;
     }
     const v = this.form.getRawValue();
-    const datos = { ...v, videogameId: Number(v.videogameId), userId: Number(v.userId), cantidad: Number(v.cantidad), total: this.total() };
-    const peticion = this.esNueva ? this.sales.crear(datos) : this.sales.modificar({ ...datos, id: Number(this.id) });
+    const datos = { ...v, cantidad: Number(v.cantidad), total: this.total() };
+    const peticion = this.esNueva ? this.sales.crear(datos) : this.sales.modificar({ ...datos, id: this.id });
 
     this.guardando.set(true);
     peticion.subscribe({
       next: (venta) => {
-        this.avisos.ok(this.esNueva ? `Venta #${venta.id} registrada` : `Venta #${venta.id} modificada`);
+        this.avisos.ok(this.esNueva ? `Venta #${venta.id.slice(-6)} registrada` : `Venta #${venta.id.slice(-6)} modificada`);
         this.router.navigate(['/admin'], { queryParams: { pestana: 'ventas' } });
       },
       error: () => this.guardando.set(false),

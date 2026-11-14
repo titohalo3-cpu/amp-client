@@ -49,7 +49,7 @@
           <tbody>
             @for (v of ventasTabla(); track v.id) {
               <tr>
-                <td>{{ v.id }}</td>
+                <td>{{ v.id.slice(-6) }}</td>
                 <td>{{ v.fecha | date: 'dd/MM/yyyy' }}</td>
                 <td><a [routerLink]="['/detalle', v.videogameId]">{{ titulo(v.videogameId) }}</a></td>
                 <td>
@@ -123,7 +123,7 @@
           <tbody>
             @for (u of usuarios(); track u.id) {
               <tr>
-                <td>{{ u.id }}</td>
+                <td>{{ u.id.slice(-6) }}</td>
                 <td>{{ u.nombre }}</td>
                 <td>{{ u.email }}</td>
                 <td>

@@ -26,9 +26,9 @@ export const sinRepetidos: ValidatorFn = (lista: AbstractControl): ValidationErr
  * Validador de GRUPO con parámetro: la cantidad no puede superar el stock del juego elegido.
  * Recibe una función que devuelve el stock de un juego (así no depende de cómo se cargan los juegos).
  */
-export function cantidadDisponible(stockDe: (videogameId: number) => number | undefined): ValidatorFn {
+export function cantidadDisponible(stockDe: (videogameId: string) => number | undefined): ValidatorFn {
   return (grupo: AbstractControl): ValidationErrors | null => {
-    const stock = stockDe(Number(grupo.get('videogameId')?.value));
+    const stock = stockDe(grupo.get('videogameId')?.value);
     const cantidad = Number(grupo.get('cantidad')?.value);
     return stock !== undefined && cantidad > stock ? { sinStock: { stock } } : null;
   };

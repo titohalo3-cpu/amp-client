@@ -7,5 +7,4 @@ router.get('/:id', ControladorVentas.getVenta);
 router.post('/', ControladorVentas.crearVenta);
 router.put('/:id', ControladorVentas.actualizarVenta);
 router.delete('/:id', ControladorVentas.eliminarVenta);
-
 module.exports = router;

@@ -20,8 +20,8 @@ describe('Validadores propios', () => {
   });
 
   it('cantidadDisponible no deja vender más que el stock', () => {
-    const validador = cantidadDisponible((id) => (id === 1 ? 5 : undefined));
-    const grupo = new FormGroup({ videogameId: new FormControl(1), cantidad: new FormControl(8) });
+    const validador = cantidadDisponible((id) => (id === 'a1' ? 5 : undefined));
+    const grupo = new FormGroup({ videogameId: new FormControl('a1'), cantidad: new FormControl(8) });
     expect(validador(grupo)).toEqual({ sinStock: { stock: 5 } });
     grupo.controls.cantidad.setValue(5);
     expect(validador(grupo)).toBeNull();

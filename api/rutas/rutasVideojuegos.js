@@ -7,5 +7,4 @@ router.get('/:id', ControladorVideojuegos.getVideojuego);
 router.post('/', ControladorVideojuegos.crearVideojuego);
 router.put('/:id', ControladorVideojuegos.actualizarVideojuego);
 router.delete('/:id', ControladorVideojuegos.eliminarVideojuego);
-
 module.exports = router;

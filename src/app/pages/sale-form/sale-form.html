@@ -8,7 +8,7 @@
   <div class="campos">
     <label class="doble">
       Videojuego
-      <select formControlName="videogameId">
+      <select formControlName="videogameId" #selJuego (change)="ponerPrecio(selJuego.value)">
         <option value="" disabled>Elige un videojuego</option>
         @for (j of juegos(); track j.id) {
           <option [value]="j.id">{{ j.titulo }} · {{ j.stock }} en stock</option>

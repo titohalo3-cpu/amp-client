@@ -73,11 +73,7 @@ export class AdminManagement implements OnInit {
 
   // ---------- Acciones de videojuegos ----------
   eliminarJuego(juego: Videogame): void {
-    const ventas = this.sales.ventas().filter((v) => v.videogameId === juego.id).length;
-    const pregunta = ventas
-      ? `"${juego.titulo}" tiene ${ventas} ventas registradas. ¿Eliminarlo igualmente?`
-      : `¿Eliminar "${juego.titulo}" del catálogo?`;
-    if (!confirm(pregunta)) return;
+    if (!confirm(`¿Eliminar "${juego.titulo}" del catálogo?`)) return;
     this.juegosSrv.delete(juego.id).subscribe(() => {
       this.juegos.update((lista) => lista.filter((j) => j.id !== juego.id));
       this.avisos.ok(`"${juego.titulo}" eliminado`);
@@ -92,24 +88,6 @@ export class AdminManagement implements OnInit {
 
   flecha(columna: keyof Sale): string {
     return this.columna() === columna ? (this.asc() ? '▲' : '▼') : '';
-  }
-
-  cambiarEstado(venta: Sale, estado: string): void {
-    this.sales
-      .modificar({ ...venta, estado: estado as EstadoVenta })
-      .subscribe(() => this.avisos.ok(`Venta #${venta.id.slice(-6)}: ${estado}`));
-  }
-
-  cambiarCantidad(venta: Sale, valor: string): void {
-    const cantidad = Number(valor);
-    if (!Number.isInteger(cantidad) || cantidad < 1) {
-      this.avisos.error('La cantidad tiene que ser un número entero mayor que 0');
-      return;
-    }
-    const total = Math.round(venta.precioUnitario * cantidad * 100) / 100;
-    this.sales
-      .modificar({ ...venta, cantidad, total })
-      .subscribe(() => this.avisos.ok(`Venta #${venta.id.slice(-6)}: ${cantidad} uds.`));
   }
 
   eliminarVenta(venta: Sale): void {

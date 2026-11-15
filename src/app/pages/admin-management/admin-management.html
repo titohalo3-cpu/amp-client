@@ -52,17 +52,9 @@
                 <td>{{ v.id.slice(-6) }}</td>
                 <td>{{ v.fecha | date: 'dd/MM/yyyy' }}</td>
                 <td><a [routerLink]="['/detalle', v.videogameId]">{{ titulo(v.videogameId) }}</a></td>
-                <td>
-                  <input #cant class="mini" type="number" min="1" [value]="v.cantidad" (change)="cambiarCantidad(v, cant.value)" aria-label="Cantidad" />
-                </td>
+                <td>{{ v.cantidad }}</td>
                 <td>{{ v.total | currency: 'EUR' }}</td>
-                <td>
-                  <select #sel [class]="'estado ' + v.estado" (change)="cambiarEstado(v, sel.value)" aria-label="Estado">
-                    @for (e of estados; track e) {
-                      <option [value]="e" [selected]="e === v.estado">{{ e }}</option>
-                    }
-                  </select>
-                </td>
+                <td><span [class]="'estado ' + v.estado">{{ v.estado }}</span></td>
                 <td class="acciones-tabla">
                   <a class="btn-texto" [routerLink]="['/admin/venta', v.id]">Editar</a>
                   <button type="button" class="btn-peligro" (click)="eliminarVenta(v)">Eliminar</button>

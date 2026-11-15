@@ -1,4 +1,4 @@
-import { AsyncPipe, CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { Component, ElementRef, afterRenderEffect, computed, inject, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
@@ -20,10 +20,10 @@ Chart.defaults.font.family = 'Inter, system-ui, sans-serif';
 const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 const PALETA = ['#ff4d2e', '#7b6cff', '#2fbf71', '#f5b942', '#22b8cf', '#e64980', '#a9e34b', '#fd7e14', '#9aa0ad', '#748ffc', '#63e6be', '#ffa8a8'];
 
-/** Pantalla de inicio: resumen, ofertas en directo, gráficos y más vendidos. */
+/** Pantalla de inicio: resumen, ofertas, gráficos y más vendidos. */
 @Component({
   selector: 'app-dashboard',
-  imports: [AsyncPipe, CurrencyPipe, DatePipe, RouterLink, PrecioFinalPipe, VideogameCard],
+  imports: [CurrencyPipe, RouterLink, PrecioFinalPipe, VideogameCard],
   templateUrl: './dashboard.html',
 })
 export class Dashboard {
@@ -33,11 +33,15 @@ export class Dashboard {
   protected sales = inject(SaleService);
   protected auth = inject(AuthService);
 
-  /** Observable que se refresca cada 30 s. Se muestra con el pipe async. */
-  protected ofertas$ = this.juegosSrv.ofertas$;
-
   /** Observable convertido en signal. */
   protected juegos = toSignal(this.juegosSrv.getAll(), { initialValue: [] as Videogame[] });
+
+  /** Juegos con descuento, del mayor al menor. */
+  protected ofertas = computed(() =>
+    this.juegos()
+      .filter((j) => j.oferta > 0)
+      .sort((a, b) => b.oferta - a.oferta),
+  );
 
   protected esGestor = computed(() => this.auth.hasRole('admin', 'trabajador'));
 

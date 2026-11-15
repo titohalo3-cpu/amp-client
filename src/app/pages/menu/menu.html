@@ -7,7 +7,6 @@
       <a routerLink="/videojuegos" routerLinkActive="activo">Videojuegos</a>
       @if (esGestor()) {
         <a routerLink="/admin" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">Gestión</a>
-        <a routerLink="/admin/videojuego/nuevo" routerLinkActive="activo">+ Nuevo juego</a>
       }
       <a routerLink="/perfil" routerLinkActive="activo" class="usuario">
         {{ auth.session()?.user?.nombre }} <small class="rol">{{ auth.rol() }}</small>

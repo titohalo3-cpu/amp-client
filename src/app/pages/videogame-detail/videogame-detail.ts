@@ -1,8 +1,6 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { catchError, map, of, switchMap } from 'rxjs';
 import { Videogame } from '../../models/videogame.interface';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
@@ -23,20 +21,21 @@ export class VideogameDetail {
   private avisos = inject(NotificationService);
   private auth = inject(AuthService);
 
-  /**
-   * 1. paramMap emite los parámetros de la URL (y vuelve a emitir si cambia el id).
-   * 2. Sacamos el id y lo pasamos a número.
-   * 3. switchMap lanza la petición HTTP (y cancela la anterior si había una).
-   * undefined = cargando · null = no existe · Videogame = encontrado
-   */
-  protected juego = toSignal(
-    this.route.paramMap.pipe(
-      map((params) => params.get('id')!),
-      switchMap((id) => this.juegosSrv.getById(id).pipe(catchError(() => of(null)))),
-    ),
-  );
+  /** El :id de la URL (detalle/:id). */
+  private id = this.route.snapshot.paramMap.get('id')!;
+
+  /** undefined = cargando · null = no existe · Videogame = encontrado */
+  protected juego = signal<Videogame | null | undefined>(undefined);
 
   protected esGestor = computed(() => this.auth.hasRole('admin', 'trabajador'));
+
+  constructor() {
+    // GET /videojuegos/:id
+    this.juegosSrv.getById(this.id).subscribe({
+      next: (juego) => this.juego.set(juego),
+      error: () => this.juego.set(null),
+    });
+  }
 
   agregar(juego: Videogame): void {
     this.cart.add(juego);

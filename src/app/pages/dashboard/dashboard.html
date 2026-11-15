@@ -29,19 +29,14 @@
 }
 
 <section class="bloque">
-  @if (ofertas$ | async; as ofertas) {
-    <div class="bloque-cab">
-      <h2>Ofertas en directo</h2>
-      <span class="en-directo">Actualizado a las {{ ofertas.hora | date: 'HH:mm:ss' }} · cada 30 s</span>
-    </div>
-    <div class="carrusel">
-      @for (j of ofertas.juegos; track j.id) {
-        <app-videogame-card [juego]="j" (agregar)="agregar($event)" />
-      }
-    </div>
-  } @else {
-    <p class="cargando">Cargando ofertas…</p>
-  }
+  <h2>Ofertas</h2>
+  <div class="carrusel">
+    @for (j of ofertas(); track j.id) {
+      <app-videogame-card [juego]="j" (agregar)="agregar($event)" />
+    } @empty {
+      <p class="cargando">Cargando ofertas…</p>
+    }
+  </div>
 </section>
 
 @if (esGestor()) {

@@ -1,6 +1,6 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EstadoVenta } from '../../models/sale.interface';
@@ -64,18 +64,15 @@ export class SaleForm {
   });
 
   constructor() {
-    // Cuando el USUARIO elige otro juego, se pone su precio actual (con la oferta aplicada).
-    // Si el cambio lo hace el código (al cargar una venta), no es "dirty" y se respeta el precio guardado.
-    this.form.controls.videogameId.valueChanges.pipe(takeUntilDestroyed()).subscribe((id) => {
-      const juego = this.juegos().find((j) => j.id === id);
-      if (juego && this.form.controls.videogameId.dirty) {
-        this.form.controls.precioUnitario.setValue(precioFinal(juego));
-      }
-    });
-
     if (!this.esNueva) {
       this.sales.obtener(this.id).subscribe((venta) => this.form.patchValue(venta));
     }
+  }
+
+  /** Al elegir un juego en el desplegable se pone su precio actual (con la oferta aplicada). */
+  ponerPrecio(id: string): void {
+    const juego = this.juegos().find((j) => j.id === id);
+    if (juego) this.form.controls.precioUnitario.setValue(precioFinal(juego));
   }
 
   invalido(campo: keyof typeof this.form.controls): boolean {

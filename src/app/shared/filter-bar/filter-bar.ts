@@ -36,14 +36,6 @@ export class FilterBar implements OnInit {
       .subscribe(() => this.filtroChange.emit(this.form.getRawValue()));
   }
 
-  /** Accesos rápidos: rellenan el formulario de golpe. */
-  atajo(tipo: 'top' | 'ofertas' | 'nuevos'): void {
-    this.form.reset();
-    if (tipo === 'top') this.form.patchValue({ valoracionMin: 4.5, orden: 'valoracion' });
-    if (tipo === 'ofertas') this.form.patchValue({ soloOfertas: true, orden: 'precio-asc' });
-    if (tipo === 'nuevos') this.form.patchValue({ orden: 'recientes' });
-  }
-
   limpiar(): void {
     this.form.reset(); // vuelve a los valores iniciales
   }

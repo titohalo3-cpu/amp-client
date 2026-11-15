@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, map, shareReplay, switchMap, timer } from 'rxjs';
+import { Observable } from 'rxjs';
 import { API_URL } from '../api.config';
 import { Filtro, Orden, Videogame } from '../models/videogame.interface';
 import { precioFinal } from '../shared/precio';
@@ -13,13 +13,7 @@ export const FILTRO_INICIAL: Filtro = {
   orden: 'valoracion',
 };
 
-/** Ofertas y la hora a la que se pidieron (para enseñar que se refrescan). */
-export interface OfertasEnDirecto {
-  juegos: Videogame[];
-  hora: Date;
-}
-
-/** Peticiones HTTP de videojuegos, lista de ofertas en directo, filtros y orden. */
+/** Peticiones HTTP de videojuegos (CRUD), y filtro y orden del catálogo. */
 @Injectable({ providedIn: 'root' })
 export class VideogameService {
   private http = inject(HttpClient);
@@ -44,20 +38,6 @@ export class VideogameService {
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.url}/${id}`);
   }
-
-  /**
-   * Lista constante de ofertas: se pide al suscribirse y luego cada 30 segundos.
-   * switchMap cancela la petición anterior si aún no ha respondido.
-   * shareReplay hace que varios componentes compartan la misma petición.
-   */
-  readonly ofertas$: Observable<OfertasEnDirecto> = timer(0, 30_000).pipe(
-    switchMap(() => this.getAll()),
-    map((juegos) => ({
-      juegos: juegos.filter((j) => j.oferta > 0).sort((a, b) => b.oferta - a.oferta),
-      hora: new Date(),
-    })),
-    shareReplay({ bufferSize: 1, refCount: true }),
-  );
 
   /** Aplica el filtro y el orden a una lista de juegos (no hace petición). */
   filtrarYOrdenar(juegos: Videogame[], f: Filtro): Videogame[] {
